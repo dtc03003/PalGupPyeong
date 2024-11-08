@@ -5,9 +5,14 @@ import { useNavigate } from "react-router-dom";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setLoading(true);
+    setError(null);
+
     try {
       await login(email, password);
       alert("로그인 성공");
@@ -15,6 +20,8 @@ const LoginPage = () => {
     } catch (error) {
       console.error(error);
       alert("로그인 실패");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,7 +39,12 @@ const LoginPage = () => {
         onChange={(e) => setPassword(e.target.value)}
         placeholder="비밀번호"
       />
-      <button onClick={handleLogin}>로그인</button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <div className="buttonContainer">
+        <button onClick={handleLogin} disabled={loading}>
+          {loading ? "로그인 중..." : "로그인"}
+        </button>
+      </div>
     </div>
   );
 };
