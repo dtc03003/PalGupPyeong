@@ -1,6 +1,6 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "../api/firebase";
-import { useMutation, useQuery } from "@tanstack/react-query";
 
 interface PushupRecord {
   count: number;
