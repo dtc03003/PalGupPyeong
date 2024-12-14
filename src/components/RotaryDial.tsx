@@ -1,11 +1,13 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from "react";
 import * as S from "./RotaryDial.styles";
 
 interface RotaryDialProps {
   onRotationChange: (value: number) => void;
 }
 
-const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
+const RotaryDial = forwardRef(({
+  onRotationChange,
+}: RotaryDialProps, ref) => {
   const [rotation, setRotation] = useState(0);
   const [selectedNumber, setSelectedNumber] = useState(0);
   const isDragging = useRef(false);
@@ -51,17 +53,10 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
 
       setRotation((prevRotation) => {
         const newRotation = prevRotation + angleDelta;
-
-        if (newRotation < 0) return prevRotation;
-
-        const newNumber = Math.max(0, Math.floor(newRotation / 36));
-        setSelectedNumber(newNumber);
-        onRotationChange(newNumber);
-
-        return newRotation;
+        return newRotation < 0 ? 0 : newRotation;
       });
     },
-    [getAngle, onRotationChange]
+    [getAngle]
   );
 
   // 드래그 끝
@@ -69,6 +64,18 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
     isDragging.current = false;
   }, []);
 
+  const handleReset = () => {
+    setRotation(0);
+    setSelectedNumber(0);
+  };
+
+  useEffect(() => {
+    if (rotation < 0) return;
+
+    const newNumber = Math.max(0, Math.floor(rotation / 36));
+    setSelectedNumber(newNumber);
+    onRotationChange(newNumber);
+  }, [rotation, onRotationChange]);
 
   useEffect(() => {
     const onMove = (e: MouseEvent | TouchEvent) => handleMove(e);
@@ -87,14 +94,19 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
     };
   }, [handleMove, handleEnd]);
 
+  useImperativeHandle(ref, () => ({
+    handleReset,
+  }));
+
+
   return (
     <S.DialContainer>
-      <S.Dial className="dial" ref={dialRef} rotation={rotation}>
-        <S.Display rotation={rotation}>{selectedNumber}</S.Display>
+      <S.Dial className="dial" ref={dialRef} $rotation={rotation}>
+        <S.Display $rotation={rotation}>{selectedNumber}</S.Display>
         <S.Handle onMouseDown={handleStart} onTouchStart={handleStart} />
       </S.Dial>
     </S.DialContainer>
   );
-};
+});
 
 export default RotaryDial;
