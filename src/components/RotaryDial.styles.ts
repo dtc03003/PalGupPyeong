@@ -1,16 +1,16 @@
 import styled from "styled-components";
 
-interface DisplayProps {
-  rotation: number;
-}
-
 export const DialContainer = styled.div`
   position: relative;
   width: 200px;
   height: 200px;
 `;
 
-export const Dial = styled.div<{ rotation: number }>`
+export const Dial = styled.div.attrs<{ $rotation: number }>((props) => ({
+  style: {
+    transform: `rotate(${props.$rotation}deg)`,
+  },
+}))`
   position: absolute;
   top: 0;
   left: 0;
@@ -22,17 +22,20 @@ export const Dial = styled.div<{ rotation: number }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: ${({ rotation }) => `rotate(${rotation}deg)`};
 `;
 
-export const Display = styled.div<DisplayProps>`
+export const Display = styled.div.attrs<{ $rotation: number }>((props) => ({
+  style: {
+    transform: `rotate(${- props.$rotation}deg)`,
+  },
+}))`
   font-size: 24px;
   font-weight: bold;
   z-index: 1;
   pointer-events: none;
-  transform: ${({ rotation }) => `rotate(${-rotation}deg)`};
   user-select: none;
 `;
+
 
 export const Handle = styled.div`
   width: 30px;
