@@ -27,12 +27,22 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
     startAngle.current = getAngle(e.clientX, e.clientY);
   };
 
+  // 터치 드래그 시작
+  const handleTouchStart = (e: React.TouchEvent) => {
+    isDragging.current = true;
+    const touch = e.touches[0];
+    startAngle.current = getAngle(touch.clientX, touch.clientY);
+  };
+
   // 마우스가 움직일 때
   const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
+    (e: MouseEvent | TouchEvent) => {
       if (!isDragging.current) return;
 
-      const currentAngle = getAngle(e.clientX, e.clientY);
+      const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
+
+      const currentAngle = getAngle(clientX, clientY);
       let angleDelta = currentAngle - startAngle.current;
 
       if (angleDelta > 180) angleDelta -= 360;
@@ -60,24 +70,35 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
     isDragging.current = false;
   }, []);
 
+  // 터치 드래그 끝
+  const handleTouchEnd = useCallback(() => {
+    isDragging.current = false;
+  }, []);
+
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => handleMouseMove(e);
+    const onTouchMove = (e: TouchEvent) => handleMouseMove(e);
     const onMouseUp = () => handleMouseUp();
+    const onTouchEnd = () => handleTouchEnd();
 
     document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("touchmove", onTouchMove);
     document.addEventListener("mouseup", onMouseUp);
+    document.addEventListener("touchend", onTouchEnd);
 
     return () => {
       document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("touchmove", onTouchMove);
       document.removeEventListener("mouseup", onMouseUp);
+      document.removeEventListener("touchend", onTouchEnd);
     };
-  }, [handleMouseMove, handleMouseUp]);
+  }, [handleMouseMove, handleMouseUp, handleTouchEnd]);
 
   return (
     <S.DialContainer>
       <S.Dial className="dial" ref={dialRef} rotation={rotation}>
         <S.Display rotation={rotation}>{selectedNumber}</S.Display>
-        <S.Handle onMouseDown={handleMouseDown} />
+        <S.Handle onMouseDown={handleMouseDown} onTouchStart={handleTouchStart} />
       </S.Dial>
     </S.DialContainer>
   );
