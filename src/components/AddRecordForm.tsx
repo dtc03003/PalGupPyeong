@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { useAddRecord } from "../hooks/useRecords";
+import RotaryDial from "./RotaryDial";
 
 const AddRecordForm = () => {
   const [count, setCount] = useState(0);
   const addRecord = useAddRecord();
+
+  const handleRotationChange = (value: number) => {
+    setCount(value);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -17,12 +22,7 @@ const AddRecordForm = () => {
 
   return (
     <div>
-      <input
-        type="number"
-        value={count}
-        onChange={(e) => setCount(Number(e.target.value))}
-        placeholder="팔굽혀펴기 횟수"
-      />
+      <RotaryDial onRotationChange={handleRotationChange} />
       <button onClick={handleSubmit}>기록 추가</button>
     </div>
   );
