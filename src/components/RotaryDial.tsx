@@ -15,27 +15,26 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
   // 좌표 계산
   const getAngle = useCallback((x: number, y: number) => {
     if (!dialRef.current) return 0;
+
     const rect = dialRef.current.getBoundingClientRect();
     const dx = x - (rect.left + rect.width / 2);
     const dy = y - (rect.top + rect.height / 2);
+
     return Math.atan2(dy, dx) * (180 / Math.PI);
   }, []);
 
-  // 마우스 드래그 시작
-  const handleMouseDown = (e: React.MouseEvent) => {
+  // 드래그 시작
+  const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
     isDragging.current = true;
-    startAngle.current = getAngle(e.clientX, e.clientY);
+
+    const clientX = "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY = "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    startAngle.current = getAngle(clientX, clientY);
   };
 
-  // 터치 드래그 시작
-  const handleTouchStart = (e: React.TouchEvent) => {
-    isDragging.current = true;
-    const touch = e.touches[0];
-    startAngle.current = getAngle(touch.clientX, touch.clientY);
-  };
-
-  // 마우스가 움직일 때
-  const handleMouseMove = useCallback(
+  // 움직일 때
+  const handleMove = useCallback(
     (e: MouseEvent | TouchEvent) => {
       if (!isDragging.current) return;
 
@@ -65,40 +64,34 @@ const RotaryDial: React.FC<RotaryDialProps> = ({ onRotationChange }) => {
     [getAngle, onRotationChange]
   );
 
-  // 마우스 드래그 끝
-  const handleMouseUp = useCallback(() => {
+  // 드래그 끝
+  const handleEnd = useCallback(() => {
     isDragging.current = false;
   }, []);
 
-  // 터치 드래그 끝
-  const handleTouchEnd = useCallback(() => {
-    isDragging.current = false;
-  }, []);
 
   useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => handleMouseMove(e);
-    const onTouchMove = (e: TouchEvent) => handleMouseMove(e);
-    const onMouseUp = () => handleMouseUp();
-    const onTouchEnd = () => handleTouchEnd();
+    const onMove = (e: MouseEvent | TouchEvent) => handleMove(e);
+    const onEnd = () => handleEnd();
 
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("touchmove", onTouchMove);
-    document.addEventListener("mouseup", onMouseUp);
-    document.addEventListener("touchend", onTouchEnd);
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("touchmove", onMove, { passive: false });
+    document.addEventListener("mouseup", onEnd);
+    document.addEventListener("touchend", onEnd);
 
     return () => {
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("mouseup", onMouseUp);
-      document.removeEventListener("touchend", onTouchEnd);
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("touchmove", onMove);
+      document.removeEventListener("mouseup", onEnd);
+      document.removeEventListener("touchend", onEnd);
     };
-  }, [handleMouseMove, handleMouseUp, handleTouchEnd]);
+  }, [handleMove, handleEnd]);
 
   return (
     <S.DialContainer>
       <S.Dial className="dial" ref={dialRef} rotation={rotation}>
         <S.Display rotation={rotation}>{selectedNumber}</S.Display>
-        <S.Handle onMouseDown={handleMouseDown} onTouchStart={handleTouchStart} />
+        <S.Handle onMouseDown={handleStart} onTouchStart={handleStart} />
       </S.Dial>
     </S.DialContainer>
   );
