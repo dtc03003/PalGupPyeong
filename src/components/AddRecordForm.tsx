@@ -2,10 +2,14 @@ import { useRef, useState } from "react";
 import { useAddRecord } from "../hooks/useRecords";
 import RotaryDial from "./RotaryDial";
 
+type RotaryDialRef = {
+  handleReset: () => void;
+};
+
 const AddRecordForm = () => {
   const [count, setCount] = useState(0);
   const addRecord = useAddRecord();
-  const rotaryDialRef = useRef<any>(null);
+  const rotaryDialRef = useRef<RotaryDialRef>(null);
 
   const handleRotationChange = (value: number) => {
     setCount(value);
