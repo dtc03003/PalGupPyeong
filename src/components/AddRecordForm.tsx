@@ -17,7 +17,7 @@ const AddRecordForm = () => {
 
   const handleSubmit = async () => {
     try {
-      await addRecord.mutateAsync({ count, date: new Date() });
+      await addRecord.mutateAsync({ count });
       alert("기록이 추가되었습니다.");
       setCount(0);
     } catch (error) {
