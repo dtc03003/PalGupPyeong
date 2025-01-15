@@ -12,6 +12,7 @@ const RotaryDial = forwardRef(({
   const [selectedNumber, setSelectedNumber] = useState(0);
   const isDragging = useRef(false);
   const startAngle = useRef(0);
+  const currentRotation = useRef(0);
   const dialRef = useRef<HTMLDivElement>(null);
 
   // 좌표 계산
@@ -22,7 +23,8 @@ const RotaryDial = forwardRef(({
     const dx = x - (rect.left + rect.width / 2);
     const dy = y - (rect.top + rect.height / 2);
 
-    return Math.atan2(dy, dx) * (180 / Math.PI);
+    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    return angle >= 0 ? angle : angle + 360;
   }, []);
 
   // 드래그 시작
@@ -32,6 +34,7 @@ const RotaryDial = forwardRef(({
 
     const clientX = "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const clientY = "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+
     startAngle.current = getAngle(clientX, clientY);
   };
 
@@ -40,6 +43,7 @@ const RotaryDial = forwardRef(({
     (e: MouseEvent | TouchEvent) => {
       if (!isDragging.current) return;
 
+      e.preventDefault();
       const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = "touches" in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
@@ -49,11 +53,12 @@ const RotaryDial = forwardRef(({
       if (angleDelta > 180) angleDelta -= 360;
       if (angleDelta < -180) angleDelta += 360;
 
+      currentRotation.current += angleDelta;
       startAngle.current = currentAngle;
 
       setRotation((prevRotation) => {
         const newRotation = prevRotation + angleDelta;
-        return newRotation < 0 ? 0 : newRotation;
+        return Math.max(0, newRotation); // 음수 값 방지
       });
     },
     [getAngle]
@@ -97,7 +102,6 @@ const RotaryDial = forwardRef(({
   useImperativeHandle(ref, () => ({
     handleReset,
   }));
-
 
   return (
     <S.DialContainer>
