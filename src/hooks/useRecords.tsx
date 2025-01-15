@@ -3,9 +3,8 @@ import {
   collection,
   doc,
   query,
-  orderBy,
   getDocs,
-  addDoc,
+  setDoc,
   deleteDoc,
   updateDoc,
   Timestamp,
@@ -15,14 +14,13 @@ import { auth } from "../api/firebase";
 
 interface PushupRecord {
   count: number;
-  date: Date;
 }
 
-type RecordData = {
+interface RecordData {
   id: string;
-  date: Date;
   count: number;
-};
+  createdAt: Timestamp;
+}
 
 interface UpdateRecordData {
   recordId: string;
@@ -41,14 +39,15 @@ export const useRecords = () => {
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
       const querySnapshot = await getDocs(
-        query(collection(db, "users", user.uid, "pushupRecords"), orderBy("date", "asc"))
+        query(collection(db, "pushupRecords", user.uid, "records"))
       );
+
       return querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           id: doc.id,
-          date: (data.date as Timestamp).toDate(), // Timestamp -> Date 변환
           count: data.count,
+          createdAt: data.createdAt,
         };
       });
     },
@@ -64,12 +63,17 @@ export const useAddRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const docRef = await addDoc(collection(db, "users", user.uid, "pushupRecords"), {
+      const newRecordWithTimestamp = {
         ...newRecord,
-        date: Timestamp.fromDate(newRecord.date),
         userId: user.uid,
-      });
-      return { id: docRef.id, ...newRecord };
+        createdAt: Timestamp.now(),
+      };
+
+      const docRef = doc(db, "pushupRecords", user.uid, "records", Timestamp.now().toMillis().toString());
+
+      await setDoc(docRef, newRecordWithTimestamp);
+
+      return { id: docRef.id, ...newRecordWithTimestamp };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
