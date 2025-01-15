@@ -29,7 +29,6 @@ const RotaryDial = forwardRef(({
 
   // 드래그 시작
   const handleStart = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
     isDragging.current = true;
 
     const clientX = "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
@@ -43,7 +42,6 @@ const RotaryDial = forwardRef(({
     (e: MouseEvent | TouchEvent) => {
       if (!isDragging.current) return;
 
-      e.preventDefault();
       const clientX = "touches" in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
       const clientY = "touches" in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
 
@@ -58,7 +56,7 @@ const RotaryDial = forwardRef(({
 
       setRotation((prevRotation) => {
         const newRotation = prevRotation + angleDelta;
-        return Math.max(0, newRotation); // 음수 값 방지
+        return Math.max(0, newRotation);
       });
     },
     [getAngle]
@@ -98,6 +96,7 @@ const RotaryDial = forwardRef(({
       document.removeEventListener("touchend", onEnd);
     };
   }, [handleMove, handleEnd]);
+
 
   useImperativeHandle(ref, () => ({
     handleReset,
