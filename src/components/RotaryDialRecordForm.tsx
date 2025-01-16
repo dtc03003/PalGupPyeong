@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
 import { useAddRecord } from "../hooks/useRecords";
 import RotaryDial from "./RotaryDial";
+import * as S from "./RotaryDialRecordForm.styles";
 
 type RotaryDialRef = {
   handleReset: () => void;
 };
 
-const AddRecordForm = () => {
+const RotaryDialRecordForm = () => {
   const [count, setCount] = useState(0);
   const addRecord = useAddRecord();
   const rotaryDialRef = useRef<RotaryDialRef>(null);
@@ -33,12 +34,14 @@ const AddRecordForm = () => {
   };
 
   return (
-    <div>
+    <>
       <RotaryDial ref={rotaryDialRef} onRotationChange={handleRotationChange} />
-      <button onClick={handleSubmit}>기록 추가</button>
-      <button onClick={handleReset}>초기화</button>
-    </div>
+      <S.ButtonContainer>
+        <S.AddRecordButton onClick={handleSubmit}>추가</S.AddRecordButton>
+        <S.ResetButton onClick={handleReset}>0</S.ResetButton>
+      </S.ButtonContainer>
+    </>
   );
 };
 
-export default AddRecordForm;
+export default RotaryDialRecordForm;
