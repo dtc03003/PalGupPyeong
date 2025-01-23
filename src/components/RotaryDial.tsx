@@ -1,13 +1,18 @@
-import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import * as S from "./RotaryDial.styles";
 
 interface RotaryDialProps {
   onRotationChange: (value: number) => void;
 }
 
-const RotaryDial = forwardRef(({
-  onRotationChange,
-}: RotaryDialProps, ref) => {
+const RotaryDial = forwardRef(({ onRotationChange }: RotaryDialProps, ref) => {
   const [rotation, setRotation] = useState(0);
   const [selectedNumber, setSelectedNumber] = useState(0);
   const isDragging = useRef(false);
@@ -23,7 +28,7 @@ const RotaryDial = forwardRef(({
     const dx = x - (rect.left + rect.width / 2);
     const dy = y - (rect.top + rect.height / 2);
 
-    let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
     return angle >= 0 ? angle : angle + 360;
   }, []);
 
@@ -96,7 +101,6 @@ const RotaryDial = forwardRef(({
       document.removeEventListener("touchend", onEnd);
     };
   }, [handleMove, handleEnd]);
-
 
   useImperativeHandle(ref, () => ({
     handleReset,
