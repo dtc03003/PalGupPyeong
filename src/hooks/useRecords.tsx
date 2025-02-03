@@ -94,7 +94,7 @@ export const useDeleteRecord = () => {
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
       // Firestore에서 해당 기록 삭제
-      const recordRef = doc(db, "users", user.uid, "pushupRecords", recordId);
+      const recordRef = doc(db, "pushupRecords", user.uid, "records", recordId);
       await deleteDoc(recordRef);
     },
     onSuccess: () => {
@@ -115,7 +115,7 @@ export const useUpdateRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const recordRef = doc(db, "users", user.uid, "pushupRecords", recordId);
+      const recordRef = doc(db, "pushupRecords", user.uid, "records", recordId);
 
       const updatedPayload = {
         ...updatedData,
