@@ -7,7 +7,7 @@ type RotaryDialRef = {
   handleReset: () => void;
 };
 
-const RotaryDialRecordForm = () => {
+const RotaryDialRecordForm = ({ onConfirm }: { onConfirm: (count: number) => void }) => {
   const [count, setCount] = useState(0);
   const addRecord = useAddRecord();
   const rotaryDialRef = useRef<RotaryDialRef>(null);
@@ -21,6 +21,7 @@ const RotaryDialRecordForm = () => {
       await addRecord.mutateAsync({ count });
       alert("기록이 추가되었습니다.");
       setCount(0);
+      onConfirm(count)
     } catch (error) {
       console.error("기록 추가 실패:", error);
     }
@@ -34,13 +35,13 @@ const RotaryDialRecordForm = () => {
   };
 
   return (
-    <>
+    <S.RotaryDialRecordForm>
       <RotaryDial ref={rotaryDialRef} onRotationChange={handleRotationChange} />
       <S.ButtonContainer>
         <S.AddRecordButton onClick={handleSubmit}>추가</S.AddRecordButton>
         <S.ResetButton onClick={handleReset}>0</S.ResetButton>
       </S.ButtonContainer>
-    </>
+    </S.RotaryDialRecordForm>
   );
 };
 
