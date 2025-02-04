@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { useAddRecord } from "../hooks/useRecords";
 import RotaryDial from "./RotaryDial";
 import * as S from "./RotaryDialRecordForm.styles";
 
@@ -9,7 +8,6 @@ type RotaryDialRef = {
 
 const RotaryDialRecordForm = ({ onConfirm }: { onConfirm: (count: number) => void }) => {
   const [count, setCount] = useState(0);
-  const addRecord = useAddRecord();
   const rotaryDialRef = useRef<RotaryDialRef>(null);
 
   const handleRotationChange = (value: number) => {
@@ -17,14 +15,7 @@ const RotaryDialRecordForm = ({ onConfirm }: { onConfirm: (count: number) => voi
   };
 
   const handleSubmit = async () => {
-    try {
-      await addRecord.mutateAsync({ count });
-      alert("기록이 추가되었습니다.");
-      setCount(0);
-      onConfirm(count)
-    } catch (error) {
-      console.error("기록 추가 실패:", error);
-    }
+    onConfirm(count);
   };
 
   const handleReset = () => {
@@ -38,7 +29,7 @@ const RotaryDialRecordForm = ({ onConfirm }: { onConfirm: (count: number) => voi
     <S.RotaryDialRecordForm>
       <RotaryDial ref={rotaryDialRef} onRotationChange={handleRotationChange} />
       <S.ButtonContainer>
-        <S.AddRecordButton onClick={handleSubmit}>추가</S.AddRecordButton>
+        <S.AddRecordButton onClick={handleSubmit}>쉬기</S.AddRecordButton>
         <S.ResetButton onClick={handleReset}>0</S.ResetButton>
       </S.ButtonContainer>
     </S.RotaryDialRecordForm>

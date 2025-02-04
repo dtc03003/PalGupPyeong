@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAddRecord } from "../hooks/useRecords";
 import RotaryDialRecordForm from "../components/RotaryDialRecordForm";
 import TimerComponent from "../components/TimerComponent";
 import RecordList from "../components/RecordList";
@@ -6,19 +7,24 @@ import RecordList from "../components/RecordList";
 const RecordsPage = () => {
   const [step, setStep] = useState<"dial" | "timer" | "record">("dial");
   const [count, setCount] = useState(0);
-
+  const addRecord = useAddRecord();
 
   const handleConfirmDial = (newCount: number) => {
-    setCount(newCount);
+    setCount(count + newCount);
     setStep("timer");
   };
 
   const handleTimerEnd = () => {
     setStep("dial");
-    setCount(0);
   };
 
-  const handleRecordButton = () => {
+  const handleRecordButton = async () => {
+    try {
+      await addRecord.mutateAsync({ count });
+      alert("기록이 추가되었습니다.");
+    } catch (error) {
+      console.error("기록 추가 실패:", error);
+    }
     setStep("record");
   };
 
