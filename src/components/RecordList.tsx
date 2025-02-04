@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRecords, useDeleteRecord, useUpdateRecord } from "../hooks/useRecords";
+import { formatDate } from "../utils/dateUtils";
 
 const RecordList = () => {
   const { data: records, isLoading } = useRecords();
@@ -56,7 +57,7 @@ const RecordList = () => {
             </>
           ) : (
             <>
-              {record.date.toDateString()} - {record.count} 회
+              {record.count} 회 - {formatDate(record.createdAt)}
               <button onClick={() => handleEdit(record)}>수정</button>
               <button onClick={() => handleDelete(record.id)}>삭제</button>
             </>
