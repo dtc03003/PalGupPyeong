@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { useAddRecord } from "../hooks/useRecords";
 import RotaryDialRecordForm from "../components/RotaryDialRecordForm";
 import TimerComponent from "../components/TimerComponent";
@@ -21,9 +22,9 @@ const RecordsPage = () => {
   const handleRecordButton = async () => {
     try {
       await addRecord.mutateAsync({ count });
-      alert("기록이 추가되었습니다.");
+      toast.success("기록이 추가되었습니다.");
     } catch (error) {
-      console.error("기록 추가 실패:", error);
+      toast.error(error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.");
     }
     setStep("record");
   };
