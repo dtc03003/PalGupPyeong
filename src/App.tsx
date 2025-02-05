@@ -7,6 +7,7 @@ import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import RecordsPage from "./pages/RecordPage";
 import Layout from "./components/Layout";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Router>
-      </Layout >
+        <ToastContainer />
+      </Layout>
     </ThemeProvider>
   );
 }
