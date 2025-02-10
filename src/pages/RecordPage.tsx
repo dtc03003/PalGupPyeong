@@ -8,6 +8,7 @@ import RecordList from "../components/RecordList";
 const RecordsPage = () => {
   const [step, setStep] = useState<"dial" | "timer" | "record">("dial");
   const [count, setCount] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false); // 중복요청 방지
   const addRecord = useAddRecord();
 
   const handleConfirmDial = (newCount: number) => {
@@ -20,13 +21,18 @@ const RecordsPage = () => {
   };
 
   const handleRecordButton = async () => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       await addRecord.mutateAsync({ count });
       toast.success("기록이 추가되었습니다.");
+      setStep("record");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
-    setStep("record");
   };
 
   return (
