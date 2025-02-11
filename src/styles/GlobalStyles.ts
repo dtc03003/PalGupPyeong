@@ -1,4 +1,5 @@
-import { createGlobalStyle } from "styled-components";
+import { ToastContainer } from "react-toastify";
+import styled, { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -35,6 +36,15 @@ const GlobalStyle = createGlobalStyle`
     border: none;
     cursor: pointer;
   }
+`;
+
+export const StyledContainer = styled(ToastContainer)`
+  width: 50%;
+  top: 50px !important;
+  right: 0 !important;
+  left: auto !important;
+  transform: none !important;
+  gap: 10px;
 `;
 
 export default GlobalStyle;

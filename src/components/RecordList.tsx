@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRecords, useDeleteRecord, useUpdateRecord } from "../hooks/useRecords";
 import { formatDate } from "../utils/dateUtils";
+import { toast } from "react-toastify";
 
 const RecordList = () => {
   const { data: records, isLoading } = useRecords();
@@ -14,9 +15,26 @@ const RecordList = () => {
 
   // 삭제 핸들러
   const handleDelete = (id: string) => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      deleteRecord.mutate(id);
-    }
+    toast(
+      ({ closeToast }) => (
+        <div>
+          <p>정말 삭제하시겠습니까?</p>
+          <button onClick={() => confirmDelete(id, closeToast)}>예</button>
+          <button onClick={closeToast}>아니오</button>
+        </div>
+      ),
+      { autoClose: false }
+    );
+  };
+
+  const confirmDelete = async (id: string, closeToast: () => void) => {
+    closeToast();
+
+    toast.promise(deleteRecord.mutateAsync(id), {
+      pending: "삭제 중...",
+      success: "기록이 삭제되었습니다.",
+      error: "삭제에 실패했습니다.",
+    });
   };
 
   // 수정 시작 핸들러

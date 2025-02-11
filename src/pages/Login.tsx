@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { login } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { login } from "../hooks/useAuth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -15,11 +16,11 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      alert("로그인 성공");
+      toast.success("로그인 성공");
       navigate("/");
     } catch (error) {
       console.error(error);
-      alert("로그인 실패");
+      toast.error(error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
