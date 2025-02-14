@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import hamburger from "../assets/icon_hamburger.svg?react"
 
 export const NavBar = styled.div`
   height: 50px;
@@ -13,6 +14,8 @@ export const Logo = styled.div`
   cursor: pointer;
 `;
 
-export const MenuIcon = styled.div`
+export const MenuIcon = styled(hamburger)`
+  width: 25px;
+  height: 25px;
   cursor: pointer;
 `;

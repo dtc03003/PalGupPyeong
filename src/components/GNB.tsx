@@ -6,7 +6,7 @@ const GNB = () => {
       <S.Logo>
         <h1>팔굽평</h1>
       </S.Logo>
-      <S.MenuIcon>☰</S.MenuIcon>
+      <S.MenuIcon />
     </S.NavBar>
   );
 };
