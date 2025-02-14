@@ -8,6 +8,7 @@ const Container = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   min-height: 100vh;
   background-color: #fff;
+  overflow: hidden;
 `;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
