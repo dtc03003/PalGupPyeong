@@ -2,6 +2,7 @@ import styled from "styled-components";
 import hamburger from "../assets/icon_hamburger.svg?react"
 
 export const NavBar = styled.div`
+  position: relative;
   height: 50px;
   display: flex;
   align-items: center;
