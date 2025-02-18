@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 
 function Home() {
@@ -9,7 +8,6 @@ function Home() {
 
   useEffect(() => {
     if (user) {
-      toast.success("로그인 성공");
       navigate("/record");
     }
   }, [user, navigate]);

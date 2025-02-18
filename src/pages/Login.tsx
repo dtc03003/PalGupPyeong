@@ -16,6 +16,7 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
+      toast.success("로그인 성공!");
       navigate("/");
     } catch (error) {
       console.error(error);
