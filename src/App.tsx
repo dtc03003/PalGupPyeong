@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import RecordsPage from "./pages/RecordPage";
-import RecordListPage from "./pages/RecordListPage";
+import MyRecordsPage from "./pages/MyRecordsPage";
 import ErrorPage from "./pages/ErrorPage";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
@@ -51,10 +51,10 @@ function App() {
               }
             />
             <Route
-              path="/recordlist"
+              path="/my-records"
               element={
                 <PrivateRoute>
-                  <RecordListPage />
+                  <MyRecordsPage />
                 </PrivateRoute>
               }
             />

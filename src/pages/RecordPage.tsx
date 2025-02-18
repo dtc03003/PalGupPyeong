@@ -28,7 +28,7 @@ const RecordsPage = () => {
     try {
       await addRecord.mutateAsync({ count });
       toast.success("기록이 추가되었습니다.");
-      navigate("/recordList");
+      navigate("/my-records");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다.");
     } finally {
