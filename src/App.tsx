@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
-import GNB from "./components/GNB";
+import NavBar from "./components/NavBar";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import LoginPage from "./pages/Login";
@@ -23,7 +23,7 @@ function App() {
       <GlobalStyle />
       <Layout>
         <Router>
-          <GNB />
+          <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
