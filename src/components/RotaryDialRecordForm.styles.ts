@@ -1,18 +1,18 @@
 import styled from "styled-components";
 
 export const RotaryDialRecordForm = styled.div`
-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
-`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
 export const ButtonContainer = styled.div`
- display: flex;
- justify-content: center;
- align-items: center;
- gap: 50px;
-`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+`;
 
 export const AddRecordButton = styled.button`
   background-color: #4caf50;
@@ -32,7 +32,6 @@ export const AddRecordButton = styled.button`
     background-color: #388e3c;
   }
 `;
-
 
 export const ResetButton = styled.button`
   background-color: #f44336;

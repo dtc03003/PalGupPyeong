@@ -3,6 +3,7 @@ import { auth } from "../api/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged,
   User,
 } from "firebase/auth";
@@ -25,6 +26,17 @@ export const login = async (email: string, password: string) => {
     return userCredential.user;
   } catch (error) {
     console.error("로그인 에러:", error);
+    throw error;
+  }
+};
+
+// 로그아웃
+export const logout = async () => {
+  try {
+    await signOut(auth);
+    console.log("로그아웃 성공");
+  } catch (error) {
+    console.error("로그아웃 에러:", error);
     throw error;
   }
 };

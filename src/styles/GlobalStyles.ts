@@ -9,6 +9,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    height: 100vh;
     font-size: 10px;
     line-height: 1.5;
     background-color: #f4f4f4;
