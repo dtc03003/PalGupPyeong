@@ -63,7 +63,7 @@ const RecordList = () => {
 
   return (
     <div>
-      <ul>
+      <S.RecordList>
         {records?.map((record) => (
           <li key={record.id}>
             {editingId === record.id ? (
@@ -85,14 +85,14 @@ const RecordList = () => {
             )}
           </li>
         ))}
-      </ul>
-      <S.Pagination>
-        {page > 1 && <button onClick={() => setPage(page - 1)}>{page - 1}</button>}
+        <S.Pagination>
+          {page > 1 && <button onClick={() => setPage(page - 1)}>{page - 1}</button>}
 
-        <button disabled>{page}</button>
+          <button disabled>{page}</button>
 
-        {!isLastPage && <button onClick={() => setPage(page + 1)}>{page + 1}</button>}
-      </S.Pagination>
+          {!isLastPage && <button onClick={() => setPage(page + 1)}>{page + 1}</button>}
+        </S.Pagination>
+      </S.RecordList>
     </div>
   );
 };
