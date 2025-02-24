@@ -24,7 +24,7 @@ interface PushupRecord {
 interface RecordData {
   id: string;
   count: number;
-  createdAt: Timestamp;
+  createdAt: Date;
 }
 
 interface UpdateRecordData {
@@ -74,7 +74,7 @@ export const useRecords = (page: number, pageSize: number) => {
         return {
           id: doc.id,
           count: data.count,
-          createdAt: data.createdAt,
+          createdAt: (data.createdAt as Timestamp).toDate(),
         };
       });
     },

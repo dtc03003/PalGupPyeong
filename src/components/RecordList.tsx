@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRecords, useDeleteRecord, useUpdateRecord } from "../hooks/useRecords";
 import { formatDate } from "../utils/dateUtils";
 import { toast } from "react-toastify";
+import { LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Line } from "recharts";
 
 import * as S from "./RecordList.styles";
 
@@ -63,6 +64,15 @@ const RecordList = () => {
 
   return (
     <div>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={records} margin={{ top: 30, right: 30, left: 0, bottom: 5 }}>
+          <XAxis dataKey="createdAt" tickFormatter={formatDate} />
+          <YAxis width={30} />
+          <Tooltip />
+          <Line type="monotone" dataKey="count" stroke="#ff4b4b" strokeWidth={4} />
+        </LineChart>
+      </ResponsiveContainer>
+
       <S.RecordList>
         {records?.map((record) => (
           <li key={record.id}>
