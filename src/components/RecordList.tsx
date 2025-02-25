@@ -68,7 +68,10 @@ const RecordList = () => {
         <LineChart data={records} margin={{ top: 30, right: 30, left: 0, bottom: 5 }}>
           <XAxis dataKey="createdAt" tickFormatter={formatDate} />
           <YAxis width={30} />
-          <Tooltip />
+          <Tooltip
+            labelFormatter={(label) => formatDate(label)}
+            formatter={(value) => [value, "갯수"]}
+          />
           <Line type="monotone" dataKey="count" stroke="#ff4b4b" strokeWidth={4} />
         </LineChart>
       </ResponsiveContainer>
