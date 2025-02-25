@@ -8,7 +8,6 @@ import {
   deleteDoc,
   updateDoc,
   Timestamp,
-  orderBy,
   limit,
   startAfter,
   QueryDocumentSnapshot,
@@ -52,7 +51,6 @@ export const useRecords = (page: number, pageSize: number) => {
 
       const recordsQuery = query(
         recordsRef,
-        orderBy("createdAt", "desc"),
         limit(pageSize),
         ...(lastVisibleDoc ? [startAfter(lastVisibleDoc)] : [])
       );
