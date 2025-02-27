@@ -8,9 +8,13 @@ import {
   deleteDoc,
   updateDoc,
   Timestamp,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 import { auth } from "../api/firebase";
+import { useState } from "react";
 
 interface PushupRecord {
   count: number;
@@ -19,7 +23,7 @@ interface PushupRecord {
 interface RecordData {
   id: string;
   count: number;
-  createdAt: Timestamp;
+  createdAt: Date;
 }
 
 interface UpdateRecordData {
@@ -30,24 +34,45 @@ interface UpdateRecordData {
   };
 }
 
-// 기록 리스트 조회
-export const useRecords = () => {
+export const useRecords = (page: number, pageSize: number) => {
+  const [lastVisibleDocs, setLastVisibleDocs] = useState<QueryDocumentSnapshot[]>([]);
+
   return useQuery<RecordData[]>({
-    queryKey: ["pushupRecords"],
+    queryKey: ["pushupRecords", page],
     queryFn: async () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const querySnapshot = await getDocs(
-        query(collection(db, "pushupRecords", user.uid, "records"))
+      const recordsRef = collection(db, "pushupRecords", user.uid, "records");
+
+      const lastVisibleDoc = page > 1 ? lastVisibleDocs[page - 2] : null;
+
+      if (page > 1 && !lastVisibleDoc) throw new Error("이전 페이지 데이터를 로드하지 못했습니다.");
+
+      const recordsQuery = query(
+        recordsRef,
+        limit(pageSize),
+        ...(lastVisibleDoc ? [startAfter(lastVisibleDoc)] : [])
       );
+
+      const querySnapshot = await getDocs(recordsQuery);
+
+      // 현재 페이지의 마지막 문서를 기록
+      if (!querySnapshot.empty) {
+        const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleDocs((prev) => {
+          const updated = [...prev];
+          updated[page - 1] = lastDoc;
+          return updated;
+        });
+      }
 
       return querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           id: doc.id,
           count: data.count,
-          createdAt: data.createdAt,
+          createdAt: (data.createdAt as Timestamp).toDate(),
         };
       });
     },
@@ -69,7 +94,13 @@ export const useAddRecord = () => {
         createdAt: Timestamp.now(),
       };
 
-      const docRef = doc(db, "pushupRecords", user.uid, "records", Timestamp.now().toMillis().toString());
+      const docRef = doc(
+        db,
+        "pushupRecords",
+        user.uid,
+        "records",
+        Timestamp.now().toMillis().toString()
+      );
 
       await setDoc(docRef, newRecordWithTimestamp);
 

@@ -2,18 +2,24 @@ import { useState } from "react";
 import { useRecords, useDeleteRecord, useUpdateRecord } from "../hooks/useRecords";
 import { formatDate } from "../utils/dateUtils";
 import { toast } from "react-toastify";
+import { LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Line } from "recharts";
+
+import * as S from "./RecordList.styles";
 
 const RecordList = () => {
-  const { data: records, isLoading } = useRecords();
   const deleteRecord = useDeleteRecord();
   const updateRecord = useUpdateRecord();
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newCount, setNewCount] = useState<number>(0);
 
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const { data: records, isLoading } = useRecords(page, pageSize);
+  const isLastPage = !records || records.length < pageSize;
+
   if (isLoading) return <p>Loading...</p>;
 
-  // 삭제 핸들러
   const handleDelete = (id: string) => {
     toast(
       ({ closeToast }) => (
@@ -37,13 +43,11 @@ const RecordList = () => {
     });
   };
 
-  // 수정 시작 핸들러
   const handleEdit = (record: { id: string; count: number }) => {
     setEditingId(record.id);
     setNewCount(record.count);
   };
 
-  // 수정 저장 핸들러
   const handleUpdate = async (recordId: string) => {
     try {
       await updateRecord.mutateAsync({ recordId, updatedData: { count: newCount } });
@@ -53,36 +57,56 @@ const RecordList = () => {
     }
   };
 
-  // 수정 취소 핸들러
   const handleCancel = () => {
     setEditingId(null);
     setNewCount(0);
   };
 
   return (
-    <ul>
-      {records?.map((record) => (
-        <li key={record.id}>
-          {editingId === record.id ? (
-            <>
-              <input
-                type="number"
-                value={newCount}
-                onChange={(e) => setNewCount(Number(e.target.value))}
-              />
-              <button onClick={() => handleUpdate(record.id)}>저장</button>
-              <button onClick={handleCancel}>취소</button>
-            </>
-          ) : (
-            <>
-              {record.count} 회 - {formatDate(record.createdAt)}
-              <button onClick={() => handleEdit(record)}>수정</button>
-              <button onClick={() => handleDelete(record.id)}>삭제</button>
-            </>
-          )}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={records} margin={{ top: 30, right: 30, left: 0, bottom: 5 }}>
+          <XAxis dataKey="createdAt" tickFormatter={formatDate} />
+          <YAxis width={30} />
+          <Tooltip
+            labelFormatter={(label) => formatDate(label)}
+            formatter={(value) => [value, "갯수"]}
+          />
+          <Line type="monotone" dataKey="count" stroke="#ff4b4b" strokeWidth={4} />
+        </LineChart>
+      </ResponsiveContainer>
+
+      <S.RecordList>
+        {records?.map((record) => (
+          <li key={record.id}>
+            {editingId === record.id ? (
+              <>
+                <input
+                  type="number"
+                  value={newCount}
+                  onChange={(e) => setNewCount(Number(e.target.value))}
+                />
+                <button onClick={() => handleUpdate(record.id)}>저장</button>
+                <button onClick={handleCancel}>취소</button>
+              </>
+            ) : (
+              <>
+                {record.count} 회 - {formatDate(record.createdAt)}
+                <button onClick={() => handleEdit(record)}>수정</button>
+                <button onClick={() => handleDelete(record.id)}>삭제</button>
+              </>
+            )}
+          </li>
+        ))}
+        <S.Pagination>
+          {page > 1 && <button onClick={() => setPage(page - 1)}>{page - 1}</button>}
+
+          <button disabled>{page}</button>
+
+          {!isLastPage && <button onClick={() => setPage(page + 1)}>{page + 1}</button>}
+        </S.Pagination>
+      </S.RecordList>
+    </div>
   );
 };
 
