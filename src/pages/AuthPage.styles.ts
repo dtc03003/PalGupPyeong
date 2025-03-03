@@ -16,6 +16,12 @@ export const Input = styled.input`
   border-radius: 5px;
 `;
 
+export const ErrorText = styled.p`
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+`;
+
 export const Button = styled.button`
   width: 100%;
   max-width: 300px;

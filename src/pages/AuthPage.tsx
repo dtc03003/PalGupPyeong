@@ -9,8 +9,21 @@ const AuthPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const [isSignup, setIsSignup] = useState(location.state?.isSignup ?? false);
   const navigate = useNavigate();
+
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+    setEmailError(isValidEmail(value) ? "" : "올바른 이메일 형식을 입력해주세요.");
+  };
+
+  const isButtonDisabled = loading || !!emailError;
 
   const handleAuth = async () => {
     setLoading(true);
@@ -33,19 +46,15 @@ const AuthPage = () => {
 
   return (
     <S.Container>
-      <S.Input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="이메일"
-      />
+      <S.Input type="email" value={email} onChange={handleEmailChange} placeholder="이메일" />
+      {emailError && <S.ErrorText>{emailError}</S.ErrorText>}
       <S.Input
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="비밀번호"
       />
-      <S.Button onClick={handleAuth} disabled={loading}>
+      <S.Button onClick={handleAuth} disabled={isButtonDisabled}>
         {loading ? "처리 중..." : isSignup ? "회원가입" : "로그인"}
       </S.Button>
       <S.ToggleText onClick={() => setIsSignup(!isSignup)}>
