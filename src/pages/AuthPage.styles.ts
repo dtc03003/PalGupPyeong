@@ -1,19 +1,43 @@
 import styled from "styled-components";
 
+export const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f3f4f6;
+  padding: 10px;
+`;
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 350px;
+  box-sizing: border-box;
+`;
+
+export const PageIndicator = styled.p`
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
 `;
 
 export const Input = styled.input`
   width: 100%;
   max-width: 300px;
-  height: 40px;
-  padding: 10px;
+  height: 45px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 10px;
 `;
 
 export const ErrorText = styled.p`
@@ -21,21 +45,22 @@ export const ErrorText = styled.p`
   max-width: 300px;
   margin-bottom: 10px;
   color: red;
-  font-size: 10px;
+  font-size: 12px;
   text-align: right;
-  height: 12px;
+  height: 16px;
   visibility: ${({ children }) => (children ? "visible" : "hidden")};
 `;
 
 export const Button = styled.button`
   width: 100%;
   max-width: 300px;
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 14px;
+  margin-bottom: 15px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
 
   &:disabled {
@@ -46,6 +71,8 @@ export const Button = styled.button`
 
 export const ToggleText = styled.p`
   cursor: pointer;
-  color: blue;
+  color: #007bff;
+  font-size: 14px;
   text-decoration: underline;
+  margin-top: 10px;
 `;
