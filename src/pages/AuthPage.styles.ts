@@ -4,28 +4,34 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
   padding: 20px;
 `;
 
 export const Input = styled.input`
   width: 100%;
   max-width: 300px;
+  height: 40px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 `;
 
 export const ErrorText = styled.p`
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 10px;
   color: red;
-  font-size: 12px;
-  margin-top: 4px;
+  font-size: 10px;
+  text-align: right;
+  height: 12px;
+  visibility: ${({ children }) => (children ? "visible" : "hidden")};
 `;
 
 export const Button = styled.button`
   width: 100%;
   max-width: 300px;
   padding: 10px;
+  margin-bottom: 10px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -34,7 +40,7 @@ export const Button = styled.button`
 
   &:disabled {
     background-color: #aaa;
-    cursor: not-allowed;
+    cursor: default;
   }
 `;
 
