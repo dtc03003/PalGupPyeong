@@ -29,6 +29,12 @@ export const PageIndicator = styled.p`
   text-align: center;
 `;
 
+export const InputContainer = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
 export const Input = styled.input`
   width: 100%;
   max-width: 300px;
@@ -37,13 +43,27 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
-  margin-bottom: 10px;
+`;
+
+export const VisibilityBtn = styled.button`
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 18px;
+  overflow: hidden;
 `;
 
 export const ErrorText = styled.p`
   width: 100%;
   max-width: 300px;
-  margin-bottom: 10px;
+  margin: 10px 0 10px 0;
   color: red;
   font-size: 12px;
   text-align: right;
