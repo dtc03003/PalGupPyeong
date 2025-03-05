@@ -20,8 +20,8 @@ function Home() {
       {error && <p>에러: {error}</p>}
 
       <div>
-        <button onClick={() => navigate("/auth", { state: { isSignup: false } })}>로그인</button>
-        <button onClick={() => navigate("/auth", { state: { isSignup: true } })}>회원가입</button>
+        <button onClick={() => navigate("/auth/login")}>로그인</button>
+        <button onClick={() => navigate("/auth/signup")}>회원가입</button>
       </div>
     </div>
   );

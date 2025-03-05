@@ -25,15 +25,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
-              path="/auth"
-              element={
-                <PublicRoute>
-                  <AuthPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/auth"
+              path="/auth/:type"
               element={
                 <PublicRoute>
                   <AuthPage />

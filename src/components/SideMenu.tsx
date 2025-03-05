@@ -49,8 +49,8 @@ const SideMenu = React.forwardRef<HTMLDivElement, SideMenuProps>(({ isOpen, onCl
           </>
         ) : (
           <>
-            <S.MenuItem onClick={() => handlePageChange("login")}>로그인</S.MenuItem>
-            <S.MenuItem onClick={() => handlePageChange("signup")}>회원가입</S.MenuItem>
+            <S.MenuItem onClick={() => handlePageChange("auth/login")}>로그인</S.MenuItem>
+            <S.MenuItem onClick={() => handlePageChange("auth/signup")}>회원가입</S.MenuItem>
           </>
         )}
       </S.ProfileSection>

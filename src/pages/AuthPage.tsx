@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { login, signup } from "../hooks/useAuth";
 import BtnEyeOff from "../assets/btn_eye_off.svg?react";
@@ -7,18 +7,22 @@ import BtnEyeON from "../assets/btn_eye_on.svg?react";
 import * as S from "./AuthPage.styles";
 
 const AuthPage = () => {
-  const location = useLocation();
+  const { type } = useParams();
+  const isSignup = type === "signup";
+  const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
-  const [isSignup, setIsSignup] = useState(location.state?.isSignup ?? false);
-  const navigate = useNavigate();
 
   const isValidEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -36,14 +40,16 @@ const AuthPage = () => {
     setConfirmPasswordError(password !== confirmPassword);
   };
 
-  const isButtonDisabled =
-    loading ||
-    emailError ||
-    passwordError ||
-    confirmPasswordError ||
-    !email ||
-    !password ||
-    (isSignup && confirmPassword !== password);
+  const isButtonDisabled = loading || emailError || passwordError || confirmPasswordError;
+
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setEmailError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
+  };
 
   const handleAuth = async () => {
     setLoading(true);
@@ -51,7 +57,7 @@ const AuthPage = () => {
       if (isSignup) {
         await signup(email, password);
         toast.success("회원가입 성공!");
-        setIsSignup(false);
+        navigate("/auth/login");
       } else {
         await login(email, password);
         toast.success("로그인 성공!");
@@ -90,7 +96,6 @@ const AuthPage = () => {
             {isPasswordVisible ? <BtnEyeON /> : <BtnEyeOff />}
           </S.VisibilityBtn>
         </S.InputContainer>
-
         <S.ErrorText>{passwordError && "비밀번호는 최소 6자 이상이어야 합니다."}</S.ErrorText>
 
         {isSignup && (
@@ -118,13 +123,8 @@ const AuthPage = () => {
         </S.Button>
         <S.ToggleText
           onClick={() => {
-            setIsSignup(!isSignup);
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
-            setEmailError(false);
-            setPasswordError(false);
-            setConfirmPasswordError(false);
+            navigate(isSignup ? "/auth/login" : "/auth/signup");
+            resetForm();
           }}
         >
           {isSignup ? "이미 계정이 있나요? 로그인" : "계정이 없나요? 회원가입"}
