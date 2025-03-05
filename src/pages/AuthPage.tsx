@@ -40,7 +40,13 @@ const AuthPage = () => {
     setConfirmPasswordError(password !== confirmPassword);
   };
 
-  const isButtonDisabled = loading || emailError || passwordError || confirmPasswordError;
+  const isButtonDisabled =
+    loading ||
+    !email ||
+    !password ||
+    emailError ||
+    passwordError ||
+    (isSignup && (!confirmPassword || confirmPasswordError));
 
   const resetForm = () => {
     setEmail("");
