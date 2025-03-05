@@ -17,7 +17,7 @@ const SideMenu = React.forwardRef<HTMLDivElement, SideMenuProps>(({ isOpen, onCl
     try {
       await logout();
       onClose();
-      navigate("/login");
+      navigate("/auth/login");
     } catch (error) {
       toast.error(
         "로그아웃 에러 발생: " + (error instanceof Error ? error.message : "알 수 없는 오류")
@@ -49,8 +49,8 @@ const SideMenu = React.forwardRef<HTMLDivElement, SideMenuProps>(({ isOpen, onCl
           </>
         ) : (
           <>
-            <S.MenuItem onClick={() => handlePageChange("login")}>로그인</S.MenuItem>
-            <S.MenuItem onClick={() => handlePageChange("signup")}>회원가입</S.MenuItem>
+            <S.MenuItem onClick={() => handlePageChange("auth/login")}>로그인</S.MenuItem>
+            <S.MenuItem onClick={() => handlePageChange("auth/signup")}>회원가입</S.MenuItem>
           </>
         )}
       </S.ProfileSection>

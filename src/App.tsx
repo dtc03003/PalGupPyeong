@@ -1,12 +1,10 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
 import NavBar from "./components/NavBar";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
-import LoginPage from "./pages/Login";
-import SignupPage from "./pages/Signup";
+import AuthPage from "./pages/AuthPage";
 import RecordsPage from "./pages/RecordPage";
 import MyRecordsPage from "./pages/MyRecordsPage";
 import ErrorPage from "./pages/ErrorPage";
@@ -27,18 +25,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
-              path="/login"
+              path="/auth/:type"
               element={
                 <PublicRoute>
-                  <LoginPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <PublicRoute>
-                  <SignupPage />
+                  <AuthPage />
                 </PublicRoute>
               }
             />

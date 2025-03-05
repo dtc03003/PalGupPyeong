@@ -19,8 +19,10 @@ function Home() {
       {loading && <p>로딩중...</p>}
       {error && <p>에러: {error}</p>}
 
-      <a href="/login">로그인</a>
-      <a href="/signup">회원가입</a>
+      <div>
+        <button onClick={() => navigate("/auth/login")}>로그인</button>
+        <button onClick={() => navigate("/auth/signup")}>회원가입</button>
+      </div>
     </div>
   );
 }
