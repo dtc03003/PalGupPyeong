@@ -17,7 +17,7 @@ const SideMenu = React.forwardRef<HTMLDivElement, SideMenuProps>(({ isOpen, onCl
     try {
       await logout();
       onClose();
-      navigate("/login");
+      navigate("/auth/login");
     } catch (error) {
       toast.error(
         "로그아웃 에러 발생: " + (error instanceof Error ? error.message : "알 수 없는 오류")
