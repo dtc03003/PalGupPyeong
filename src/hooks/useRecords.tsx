@@ -11,6 +11,7 @@ import {
   limit,
   startAfter,
   QueryDocumentSnapshot,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 import { auth } from "../api/firebase";
@@ -79,6 +80,18 @@ export const useRecords = (page: number, pageSize: number) => {
   });
 };
 
+export const fetchDailyRecords = async () => {
+  const user = auth.currentUser;
+  if (!user) return null;
+
+  const dayKey = getDayKey(new Date());
+  const docRef = doc(db, "pushupRecords", user.uid, "daily", dayKey);
+  const docSnap = await getDoc(docRef);
+
+  return docSnap.exists() ? docSnap.data()?.total : 0;
+};
+
+
 // 기록 추가
 export const useAddRecord = () => {
   const queryClient = useQueryClient();
@@ -88,23 +101,40 @@ export const useAddRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
+      const now = Timestamp.now();
+      const dayKey = getDayKey(now.toDate()); // 일간 키 (YYYY-MM-DD)
+      const weekKey = getWeekKey(now.toDate()); // 주간 키 (YYYY-WW)
+      const monthKey = getMonthKey(now.toDate()); // 월간 키 (YYYY-MM)
+
       const newRecordWithTimestamp = {
         ...newRecord,
         userId: user.uid,
-        createdAt: Timestamp.now(),
+        createdAt: now,
       };
 
-      const docRef = doc(
-        db,
-        "pushupRecords",
-        user.uid,
-        "records",
-        Timestamp.now().toMillis().toString()
-      );
+      // 개별 기록 저장
+      const recordRef = doc(db, "pushupRecords", user.uid, "records", now.toMillis().toString());
+      await setDoc(recordRef, newRecordWithTimestamp);
 
-      await setDoc(docRef, newRecordWithTimestamp);
+      // 일간 합산 기록 업데이트
+      const dailyRef = doc(db, "pushupRecords", user.uid, "daily", dayKey);
+      const dailyDoc = await getDoc(dailyRef);
+      const dailyTotal = dailyDoc.exists() ? dailyDoc.data()?.total || 0 : 0;
+      await setDoc(dailyRef, { total: dailyTotal + newRecord.count }, { merge: true });
 
-      return { id: docRef.id, ...newRecordWithTimestamp };
+      // 주간 합산 기록 업데이트
+      const weeklyRef = doc(db, "pushupRecords", user.uid, "weekly", weekKey);
+      const weeklyDoc = await getDoc(weeklyRef);
+      const weeklyTotal = weeklyDoc.exists() ? weeklyDoc.data()?.total || 0 : 0;
+      await setDoc(weeklyRef, { total: weeklyTotal + newRecord.count }, { merge: true });
+
+      // 월간 합산 기록 업데이트
+      const monthlyRef = doc(db, "pushupRecords", user.uid, "monthly", monthKey);
+      const monthlyDoc = await getDoc(monthlyRef);
+      const monthlyTotal = monthlyDoc.exists() ? monthlyDoc.data()?.total || 0 : 0;
+      await setDoc(monthlyRef, { total: monthlyTotal + newRecord.count }, { merge: true });
+
+      return { id: recordRef.id, ...newRecordWithTimestamp };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -114,6 +144,26 @@ export const useAddRecord = () => {
     },
   });
 };
+
+// 일 단위 키 (YYYY-MM-DD)
+const getDayKey = (date: Date) => {
+  return date.toISOString().split("T")[0];
+};
+
+// 주 단위 키 (YYYY-WW)
+const getWeekKey = (date: Date) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const week = Math.floor((d.getTime() - new Date(year, 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
+  return `${year}-W${week}`;
+};
+
+// 월 단위 키 (YYYY-MM)
+const getMonthKey = (date: Date) => {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+};
+
 
 // 기록 삭제
 export const useDeleteRecord = () => {
