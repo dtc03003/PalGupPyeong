@@ -3,7 +3,7 @@ import { ThemeProvider } from "styled-components";
 
 import NavBar from "./components/NavBar";
 import Layout from "./components/Layout";
-import Home from "./pages/Home";
+import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
 import RecordsPage from "./pages/RecordPage";
 import MyRecordsPage from "./pages/MyRecordsPage";
@@ -23,7 +23,7 @@ function App() {
         <Router>
           <NavBar />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
             <Route
               path="/auth/:type"
               element={
