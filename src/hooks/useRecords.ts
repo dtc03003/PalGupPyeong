@@ -35,6 +35,7 @@ interface UpdateRecordData {
   };
 }
 
+// 기록 조회
 export const useRecords = (page: number, pageSize: number) => {
   const [lastVisibleDocs, setLastVisibleDocs] = useState<QueryDocumentSnapshot[]>([]);
 
@@ -80,21 +81,30 @@ export const useRecords = (page: number, pageSize: number) => {
   });
 };
 
-export const fetchDailyRecords = async () => {
-  const user = auth.currentUser;
-  if (!user) return null;
-
-  const dayKey = getDayKey(new Date());
-  const docRef = doc(db, "pushupRecords", user.uid, "daily", dayKey);
-  const docSnap = await getDoc(docRef);
-
-  return docSnap.exists() ? docSnap.data()?.total : 0;
-};
-
-
 // 기록 추가
 export const useAddRecord = () => {
   const queryClient = useQueryClient();
+
+  // 일 단위 키 (YYYY-MM-DD)
+  const getDayKey = (date: Date) => {
+    return date.toISOString().split("T")[0];
+  };
+
+  // 주 단위 키 (YYYY-WW)
+  const getWeekKey = (date: Date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const week = Math.floor(
+      (d.getTime() - new Date(year, 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000)
+    );
+    return `${year}-W${week}`;
+  };
+
+  // 월 단위 키 (YYYY-MM)
+  const getMonthKey = (date: Date) => {
+    const d = new Date(date);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  };
 
   return useMutation({
     mutationFn: async (newRecord: PushupRecord) => {
@@ -144,26 +154,6 @@ export const useAddRecord = () => {
     },
   });
 };
-
-// 일 단위 키 (YYYY-MM-DD)
-const getDayKey = (date: Date) => {
-  return date.toISOString().split("T")[0];
-};
-
-// 주 단위 키 (YYYY-WW)
-const getWeekKey = (date: Date) => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const week = Math.floor((d.getTime() - new Date(year, 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
-  return `${year}-W${week}`;
-};
-
-// 월 단위 키 (YYYY-MM)
-const getMonthKey = (date: Date) => {
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-};
-
 
 // 기록 삭제
 export const useDeleteRecord = () => {
