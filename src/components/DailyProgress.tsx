@@ -1,4 +1,5 @@
 import React from "react";
+import * as S from "./DailyProgress.styles";
 
 interface DailyProgressProps {
   total: number;
@@ -7,25 +8,17 @@ interface DailyProgressProps {
 
 const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
   const progress = goal > 0 ? Math.min((total / goal) * 100, 100) : 0;
-  const progressColor = progress >= 50 ? "green" : "orange";
 
   return (
-    <div>
-      <p>
+    <S.Container>
+      <S.ProgressText>
         오늘의 진행률: {total} / {goal} 회
-      </p>
-      <div style={{ width: "100%", background: "#eee", borderRadius: "5px", overflow: "hidden" }}>
-        <div
-          style={{
-            width: `${progress}%`,
-            background: progressColor,
-            height: "10px",
-            transition: "width 0.3s ease-in-out",
-          }}
-        />
-      </div>
-      <p>{progress.toFixed(1)}%</p>
-    </div>
+      </S.ProgressText>
+      <S.ProgressBar>
+        <S.ProgressFill progress={progress} />
+      </S.ProgressBar>
+      <S.Percentage>{progress.toFixed(1)}%</S.Percentage>
+    </S.Container>
   );
 };
 
