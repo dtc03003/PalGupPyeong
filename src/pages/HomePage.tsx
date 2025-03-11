@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { useAuth } from "../hooks/useAuth";
 import { fetchDailyRecords } from "../hooks/useDailyRecords";
-import { useGetDailyGoal } from "../hooks/useDailyGoal";
+import { useGetDailyGoal, useSetDailyGoal } from "../hooks/useDailyGoal";
 import DailyProgress from "../components/DailyProgress";
+
+import * as S from "./HomePage.styles";
 
 function Home() {
   const { user, loading: authLoading } = useAuth();
@@ -11,6 +14,7 @@ function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const { data: dailyGoal = 100, isLoading: goalLoading, error: goalError } = useGetDailyGoal();
+  const setDailyGoal = useSetDailyGoal();
 
   useEffect(() => {
     const getRecord = async () => {
@@ -35,20 +39,54 @@ function Home() {
     }
   }, [user, authLoading]);
 
-  return (
-    <div>
-      <h1>메인페이지</h1>
+  const handleSetGoal = () => {
+    let newGoal = dailyGoal;
 
-      {(loading || goalLoading) && <p>로딩중...</p>}
-      {(error || goalError) && <p>에러: {error || goalError?.message}</p>}
+    toast.dismiss();
+
+    toast(
+      ({ closeToast }) => (
+        <S.ToastContainer>
+          <p>하루 목표 설정</p>
+          <S.GoalInput
+            type="number"
+            defaultValue={dailyGoal}
+            onChange={(e) => (newGoal = Number(e.target.value))}
+          />
+          <S.ButtonContainer>
+            <S.SaveButton
+              onClick={async () => {
+                await setDailyGoal.mutateAsync(newGoal);
+                toast.success("목표가 저장되었습니다!");
+                closeToast();
+              }}
+            >
+              저장
+            </S.SaveButton>
+            <S.CancelButton onClick={closeToast}>취소</S.CancelButton>
+          </S.ButtonContainer>
+        </S.ToastContainer>
+      ),
+      { autoClose: false }
+    );
+  };
+
+  return (
+    <S.Container>
+      <S.Title>메인페이지</S.Title>
+
+      {(loading || goalLoading) && <S.Message>로딩중...</S.Message>}
+      {(error || goalError) && <S.ErrorMessage>에러: {error || goalError?.message}</S.ErrorMessage>}
 
       {!loading && !error && !goalLoading && !goalError && (
-        <DailyProgress total={dailyRecord || 0} goal={dailyGoal} />
+        <>
+          <DailyProgress total={dailyRecord || 0} goal={dailyGoal} />
+          <S.GoalButton onClick={handleSetGoal}>목표 설정</S.GoalButton>
+        </>
       )}
-
       {/* 주간 월간 통계 */}
       {/* 빠른 기록 추가 */}
-    </div>
+    </S.Container>
   );
 }
 
