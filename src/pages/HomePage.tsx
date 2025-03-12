@@ -67,7 +67,7 @@ function Home() {
           </S.ButtonContainer>
         </S.ToastContainer>
       ),
-      { autoClose: false }
+      { autoClose: false, closeOnClick: false }
     );
   };
 
