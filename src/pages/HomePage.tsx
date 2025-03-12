@@ -1,46 +1,38 @@
-import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useAuth } from "../hooks/useAuth";
-import { fetchDailyRecords } from "../hooks/useDailyRecords";
-import { useGetDailyGoal, useSetDailyGoal } from "../hooks/useDailyGoal";
+import { useSetDailyGoal } from "../hooks/useDailyGoal";
+import { useGetDailyRecords } from "../hooks/useGetDailyRecords";
+import { useGetWeeklyRecords } from "../hooks/useGetWeeklyRecords";
+import { useGetMonthlyRecords } from "../hooks/useGetMonthlyRecords";
+
 import DailyProgress from "../components/DailyProgress";
 
 import * as S from "./HomePage.styles";
 
 function Home() {
-  const { user, loading: authLoading } = useAuth();
-  const [dailyRecord, setDailyRecord] = useState<number | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: dailyStats, isLoading: dailyLoading, isError: dailyError } = useGetDailyRecords();
+  const {
+    data: weeklyStats,
+    isLoading: weeklyLoading,
+    isError: weeklyError,
+  } = useGetWeeklyRecords();
+  const {
+    data: monthlyStats,
+    isLoading: monthlyLoading,
+    isError: monthlyError,
+  } = useGetMonthlyRecords();
 
-  const { data: dailyGoal = 100, isLoading: goalLoading, error: goalError } = useGetDailyGoal();
-  const setDailyGoal = useSetDailyGoal();
+  const { mutateAsync: setDailyGoal } = useSetDailyGoal();
 
-  useEffect(() => {
-    const getRecord = async () => {
-      if (!user) {
-        setError("로그인된 사용자가 없습니다.");
-        setLoading(false);
-        return;
-      }
+  if (dailyLoading || weeklyLoading || monthlyLoading) {
+    return <div>로딩 중...</div>;
+  }
 
-      try {
-        const result = await fetchDailyRecords();
-        setDailyRecord(result);
-      } catch {
-        setError("데이터를 불러오는 데 실패했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (!authLoading) {
-      getRecord();
-    }
-  }, [user, authLoading]);
+  if (dailyError || weeklyError || monthlyError) {
+    return <div>에러가 발생했습니다!</div>;
+  }
 
   const handleSetGoal = () => {
-    let newGoal = dailyGoal;
+    let newGoal = dailyStats || 100;
 
     toast.dismiss();
 
@@ -50,13 +42,13 @@ function Home() {
           <p>하루 목표 설정</p>
           <S.GoalInput
             type="number"
-            defaultValue={dailyGoal}
+            defaultValue={dailyStats || 100}
             onChange={(e) => (newGoal = Number(e.target.value))}
           />
           <S.ButtonContainer>
             <S.SaveButton
               onClick={async () => {
-                await setDailyGoal.mutateAsync(newGoal);
+                await setDailyGoal(newGoal);
                 toast.success("목표가 저장되었습니다!");
                 closeToast();
               }}
@@ -75,16 +67,32 @@ function Home() {
     <S.Container>
       <S.Title>메인페이지</S.Title>
 
-      {(loading || goalLoading) && <S.Message>로딩중...</S.Message>}
-      {(error || goalError) && <S.ErrorMessage>에러: {error || goalError?.message}</S.ErrorMessage>}
-
-      {!loading && !error && !goalLoading && !goalError && (
-        <>
-          <DailyProgress total={dailyRecord || 0} goal={dailyGoal} />
-          <S.GoalButton onClick={handleSetGoal}>목표 설정</S.GoalButton>
-        </>
+      {(dailyLoading || weeklyLoading || monthlyLoading) && <S.Message>로딩중...</S.Message>}
+      {(dailyError || weeklyError || monthlyError) && (
+        <S.ErrorMessage>에러: {dailyError || weeklyError || monthlyError}</S.ErrorMessage>
       )}
-      {/* 주간 월간 통계 */}
+
+      {!dailyLoading &&
+        !weeklyLoading &&
+        !monthlyLoading &&
+        !dailyError &&
+        !weeklyError &&
+        !monthlyError && (
+          <>
+            <DailyProgress total={dailyStats || 0} goal={100} />
+            <S.GoalButton onClick={handleSetGoal}>목표 설정</S.GoalButton>
+          </>
+        )}
+
+      <div>
+        <h3>주간 통계</h3>
+        <p>{weeklyStats}</p>
+      </div>
+      <div>
+        <h3>월간 통계</h3>
+        <p>{monthlyStats}</p>
+      </div>
+
       {/* 빠른 기록 추가 */}
     </S.Container>
   );
