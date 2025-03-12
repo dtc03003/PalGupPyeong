@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   collection,
@@ -15,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 import { auth } from "../api/firebase";
-import { useState } from "react";
+import { getDayKey, getMonthKey, getWeekKey } from "../utils/dateUtils";
 
 interface PushupRecord {
   count: number;
@@ -84,27 +85,6 @@ export const useRecords = (page: number, pageSize: number) => {
 // 기록 추가
 export const useAddRecord = () => {
   const queryClient = useQueryClient();
-
-  // 일 단위 키 (YYYY-MM-DD)
-  const getDayKey = (date: Date) => {
-    return date.toISOString().split("T")[0];
-  };
-
-  // 주 단위 키 (YYYY-WW)
-  const getWeekKey = (date: Date) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const week = Math.floor(
-      (d.getTime() - new Date(year, 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000)
-    );
-    return `${year}-W${week}`;
-  };
-
-  // 월 단위 키 (YYYY-MM)
-  const getMonthKey = (date: Date) => {
-    const d = new Date(date);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-  };
 
   return useMutation({
     mutationFn: async (newRecord: PushupRecord) => {
