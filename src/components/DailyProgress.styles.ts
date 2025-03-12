@@ -22,10 +22,10 @@ export const ProgressBar = styled.div`
   overflow: hidden;
 `;
 
-export const ProgressFill = styled.div<{ progress: number }>`
+export const ProgressFill = styled.div<{ $progress: number }>`
   height: 100%;
-  width: ${({ progress }) => `${progress}%`};
-  background: ${({ progress }) => (progress >= 50 ? "green" : "orange")};
+  width: ${({ $progress }) => `${$progress}%`};
+  background: ${({ $progress }) => ($progress >= 50 ? "green" : "orange")};
   transition: width 0.3s ease-in-out;
 `;
 

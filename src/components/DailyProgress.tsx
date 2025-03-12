@@ -15,7 +15,7 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
         오늘의 진행률: {total} / {goal} 회
       </S.ProgressText>
       <S.ProgressBar>
-        <S.ProgressFill progress={progress} />
+        <S.ProgressFill $progress={progress} />
       </S.ProgressBar>
       <S.Percentage>{progress.toFixed(1)}%</S.Percentage>
     </S.Container>
