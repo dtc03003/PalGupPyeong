@@ -127,10 +127,9 @@ export const useAddRecord = () => {
       return { id: recordRef.id, ...newRecordWithTimestamp };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["pushupRecords"],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["weeklyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["monthlyStats"] });
     },
   });
 };

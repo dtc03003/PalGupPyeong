@@ -7,6 +7,7 @@ import { useGetMonthlyRecords } from "../hooks/useGetMonthlyRecords";
 import DailyProgress from "../components/DailyProgress";
 
 import * as S from "./HomePage.styles";
+import QuickAddRecord from "../components/QuickAddRecord";
 
 function Home() {
   const { data: dailyStats, isLoading: dailyLoading, isError: dailyError } = useGetDailyRecords();
@@ -94,6 +95,7 @@ function Home() {
       </div>
 
       {/* 빠른 기록 추가 */}
+      <QuickAddRecord />
     </S.Container>
   );
 }
