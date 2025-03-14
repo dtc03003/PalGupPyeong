@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   collection,
@@ -11,10 +12,11 @@ import {
   limit,
   startAfter,
   QueryDocumentSnapshot,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 import { auth } from "../api/firebase";
-import { useState } from "react";
+import { getDayKey, getMonthKey, getWeekKey } from "../utils/dateUtils";
 
 interface PushupRecord {
   count: number;
@@ -34,6 +36,7 @@ interface UpdateRecordData {
   };
 }
 
+// 기록 조회
 export const useRecords = (page: number, pageSize: number) => {
   const [lastVisibleDocs, setLastVisibleDocs] = useState<QueryDocumentSnapshot[]>([]);
 
@@ -88,29 +91,45 @@ export const useAddRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
+      const now = Timestamp.now();
+      const dayKey = getDayKey(now.toDate()); // 일간 키 (YYYY-MM-DD)
+      const weekKey = getWeekKey(now.toDate()); // 주간 키 (YYYY-WW)
+      const monthKey = getMonthKey(now.toDate()); // 월간 키 (YYYY-MM)
+
       const newRecordWithTimestamp = {
         ...newRecord,
         userId: user.uid,
-        createdAt: Timestamp.now(),
+        createdAt: now,
       };
 
-      const docRef = doc(
-        db,
-        "pushupRecords",
-        user.uid,
-        "records",
-        Timestamp.now().toMillis().toString()
-      );
+      // 개별 기록 저장
+      const recordRef = doc(db, "pushupRecords", user.uid, "records", now.toMillis().toString());
+      await setDoc(recordRef, newRecordWithTimestamp);
 
-      await setDoc(docRef, newRecordWithTimestamp);
+      // 일간 합산 기록 업데이트
+      const dailyRef = doc(db, "pushupRecords", user.uid, "daily", dayKey);
+      const dailyDoc = await getDoc(dailyRef);
+      const dailyTotal = dailyDoc.exists() ? dailyDoc.data()?.total || 0 : 0;
+      await setDoc(dailyRef, { total: dailyTotal + newRecord.count }, { merge: true });
 
-      return { id: docRef.id, ...newRecordWithTimestamp };
+      // 주간 합산 기록 업데이트
+      const weeklyRef = doc(db, "pushupRecords", user.uid, "weekly", weekKey);
+      const weeklyDoc = await getDoc(weeklyRef);
+      const weeklyTotal = weeklyDoc.exists() ? weeklyDoc.data()?.total || 0 : 0;
+      await setDoc(weeklyRef, { total: weeklyTotal + newRecord.count }, { merge: true });
+
+      // 월간 합산 기록 업데이트
+      const monthlyRef = doc(db, "pushupRecords", user.uid, "monthly", monthKey);
+      const monthlyDoc = await getDoc(monthlyRef);
+      const monthlyTotal = monthlyDoc.exists() ? monthlyDoc.data()?.total || 0 : 0;
+      await setDoc(monthlyRef, { total: monthlyTotal + newRecord.count }, { merge: true });
+
+      return { id: recordRef.id, ...newRecordWithTimestamp };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["pushupRecords"],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["weeklyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["monthlyStats"] });
     },
   });
 };
