@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Setting from "../assets/icon_setting.svg?react";
 
 export const Container = styled.div`
   width: 100%;
@@ -11,6 +12,12 @@ export const Container = styled.div`
   border-radius: 16px;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
   background: #fff;
+  position: relative;
+`;
+export const Header = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export const ProgressText = styled.p`
@@ -18,6 +25,15 @@ export const ProgressText = styled.p`
   font-weight: bold;
   color: #333;
   white-space: nowrap;
+`;
+
+export const SettingBtn = styled(Setting)`
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
 `;
 
 export const ProgressBar = styled.div`
@@ -40,4 +56,69 @@ export const Percentage = styled.p`
   font-size: 16px;
   font-weight: bold;
   color: #555;
+`;
+
+export const ToastContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+export const GoalInput = styled.input`
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+export const SaveButton = styled.button`
+  padding: 8px 15px;
+  font-size: 14px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #218838;
+  }
+`;
+
+export const CancelButton = styled.button`
+  padding: 8px 15px;
+  font-size: 14px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #c82333;
+  }
+`;
+
+export const GoalButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
