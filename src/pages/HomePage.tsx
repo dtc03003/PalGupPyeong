@@ -3,9 +3,9 @@ import { useGetWeeklyRecords } from "../hooks/useGetWeeklyRecords";
 import { useGetMonthlyRecords } from "../hooks/useGetMonthlyRecords";
 
 import DailyProgress from "../components/DailyProgress";
+import QuickAddRecord from "../components/QuickAddRecord";
 
 import * as S from "./HomePage.styles";
-import QuickAddRecord from "../components/QuickAddRecord";
 
 const Home = () => {
   const { data: dailyStats, isLoading: dailyLoading, isError: dailyError } = useGetDailyRecords();
