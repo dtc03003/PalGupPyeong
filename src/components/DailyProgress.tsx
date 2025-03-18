@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useGetDailyRecords } from "../hooks/useGetDailyRecords";
 import { useSetDailyGoal } from "../hooks/useDailyGoal";
 import * as S from "./DailyProgress.styles";
 
@@ -10,14 +9,12 @@ interface DailyProgressProps {
 }
 
 const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
-  const { data: dailyStats } = useGetDailyRecords();
   const setDailyGoal = useSetDailyGoal();
+  const [newGoal, setNewGoal] = useState<number>(goal);
 
   const progress = goal > 0 ? Math.min((total / goal) * 100, 100) : 0;
 
   const handleSetGoal = () => {
-    let newGoal = dailyStats || 100;
-
     toast.dismiss();
 
     toast(
@@ -26,15 +23,19 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
           <p>하루 목표 설정</p>
           <S.GoalInput
             type="number"
-            defaultValue={dailyStats || 100}
-            onChange={(e) => (newGoal = Number(e.target.value))}
+            defaultValue={goal}
+            onChange={(e) => setNewGoal(Number(e.target.value))}
           />
           <S.ButtonContainer>
             <S.SaveButton
               onClick={async () => {
-                await setDailyGoal.mutateAsync(newGoal);
-                toast.success("목표가 저장되었습니다!");
-                closeToast();
+                try {
+                  await setDailyGoal.mutateAsync(newGoal);
+                  toast.success("목표가 저장되었습니다!");
+                  closeToast();
+                } catch {
+                  toast.error("목표 저장에 실패했습니다. 다시 시도해주세요.");
+                }
               }}
             >
               저장
