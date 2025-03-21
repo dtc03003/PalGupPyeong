@@ -35,22 +35,20 @@ const Home = () => {
     <S.Container>
       <S.Title>메인페이지</S.Title>
 
-      {/* 일일 진행률 */}
       <DailyProgress total={dailyStats || 0} goal={100} />
 
-      {/* 주간 통계 */}
-      <div>
-        <h3>주간 통계</h3>
-        {weeklyStats ? <p>{weeklyStats}</p> : <p>데이터가 없습니다.</p>}
-      </div>
+      <S.StatsWrapper>
+        <S.StatsContainer>
+          <S.StatsTitle>주간 통계</S.StatsTitle>
+          <S.StatsText>{weeklyStats ? `${weeklyStats}` : "데이터가 없습니다."}</S.StatsText>
+        </S.StatsContainer>
 
-      {/* 월간 통계 */}
-      <div>
-        <h3>월간 통계</h3>
-        {monthlyStats ? <p>{monthlyStats}</p> : <p>데이터가 없습니다.</p>}
-      </div>
+        <S.StatsContainer>
+          <S.StatsTitle>월간 통계</S.StatsTitle>
+          <S.StatsText>{monthlyStats ? `${monthlyStats}` : "데이터가 없습니다."}</S.StatsText>
+        </S.StatsContainer>
+      </S.StatsWrapper>
 
-      {/* 빠른 기록 추가 */}
       <QuickAddRecord />
     </S.Container>
   );
