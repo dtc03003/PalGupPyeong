@@ -21,10 +21,25 @@ export const Header = styled.div`
 `;
 
 export const ProgressText = styled.p`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   color: #333;
-  white-space: nowrap;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  strong {
+    font-size: 18px;
+    color: #000;
+  }
 `;
 
 export const SettingBtn = styled(Setting)`
@@ -48,7 +63,14 @@ export const ProgressBar = styled.div`
 export const ProgressFill = styled.div<{ $progress: number }>`
   height: 100%;
   width: ${({ $progress }) => `${$progress}%`};
-  background: ${({ $progress }) => ($progress >= 50 ? "#4caf50" : "#ff9800")};
+  background: ${({ $progress }) =>
+    $progress >= 75
+      ? "#2e7d32"
+      : $progress >= 50
+      ? "#4caf50"
+      : $progress >= 25
+      ? "#ffb74d"
+      : "#ff5722"};
   transition: width 0.3s ease-in-out;
 `;
 
@@ -56,6 +78,13 @@ export const Percentage = styled.p`
   font-size: 16px;
   font-weight: bold;
   color: #555;
+`;
+
+export const Message = styled.p`
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+  margin-top: 8px;
 `;
 
 export const ToastContainer = styled.div`
