@@ -35,7 +35,7 @@ const Home = () => {
     <S.Container>
       <S.Title>메인페이지</S.Title>
 
-      <DailyProgress total={dailyStats || 0} goal={100} />
+      <DailyProgress total={dailyStats || 0} />
 
       <S.StatsWrapper>
         <S.StatsContainer>
