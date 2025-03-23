@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { useSetDailyGoal } from "../hooks/useDailyGoal";
+import { useSetDailyGoal, useGetDailyGoal } from "../hooks/useDailyGoal";
 import * as S from "./DailyProgress.styles";
 
 interface DailyProgressProps {
   total: number;
-  goal: number;
 }
 
-const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
+const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
+  const { data: goal = 0, isLoading } = useGetDailyGoal();
+  const newGoalRef = useRef<number>(goal);
   const setDailyGoal = useSetDailyGoal();
-  const [newGoal, setNewGoal] = useState<number>(goal);
+
+  useEffect(() => {
+    newGoalRef.current = goal;
+  }, [goal]);
+
+  if (isLoading) {
+    return <S.Message>목표를 불러오는 중...</S.Message>;
+  }
 
   const progress = goal > 0 ? Math.min((total / goal) * 100, 100) : 0;
 
@@ -26,8 +34,6 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
   const message = getMotivationalMessage(progress);
 
   const handleSetGoal = () => {
-    toast.dismiss();
-
     toast(
       ({ closeToast }) => (
         <S.ToastContainer>
@@ -35,13 +41,15 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total, goal }) => {
           <S.GoalInput
             type="number"
             defaultValue={goal}
-            onChange={(e) => setNewGoal(Number(e.target.value))}
+            onChange={(e) => {
+              newGoalRef.current = Number(e.target.value);
+            }}
           />
           <S.ButtonContainer>
             <S.SaveButton
               onClick={async () => {
                 try {
-                  await setDailyGoal.mutateAsync(newGoal);
+                  await setDailyGoal.mutateAsync(newGoalRef.current);
                   toast.success("목표가 저장되었습니다!");
                   closeToast();
                 } catch {
