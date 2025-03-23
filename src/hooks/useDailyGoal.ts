@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../api/firebase";
 
-// 일일 목표량 조회
+// 일일 목표량 설정
 export const useSetDailyGoal = () => {
   const queryClient = useQueryClient();
 
@@ -11,7 +11,7 @@ export const useSetDailyGoal = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const goalRef = doc(db, "pushupGoals", user.uid, "daily", getDayKey(new Date()));
+      const goalRef = doc(db, "pushupGoals", user.uid);
       await setDoc(goalRef, { goal }, { merge: true });
     },
     onSuccess: () => {
@@ -20,7 +20,7 @@ export const useSetDailyGoal = () => {
   });
 };
 
-// 일일 목표량 저장
+// 일일 목표량 조회
 export const useGetDailyGoal = () => {
   const user = auth.currentUser;
 
@@ -29,13 +29,10 @@ export const useGetDailyGoal = () => {
     queryFn: async () => {
       if (!user) return 0;
 
-      const goalRef = doc(db, "pushupGoals", user.uid, "daily", getDayKey(new Date()));
+      const goalRef = doc(db, "pushupGoals", user.uid);
       const goalSnap = await getDoc(goalRef);
       return goalSnap.exists() ? goalSnap.data().goal : 0;
     },
     enabled: !!user,
   });
 };
-
-// 일 단위 키 (YYYY-MM-DD)
-const getDayKey = (date: Date) => date.toISOString().split("T")[0];
