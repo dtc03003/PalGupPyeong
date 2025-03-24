@@ -33,7 +33,9 @@ const Home = () => {
 
   return (
     <S.Container>
-      <S.Title>메인페이지</S.Title>
+      <S.Title>팔굽평</S.Title>
+
+      <QuickAddRecord />
 
       <DailyProgress total={dailyStats || 0} />
 
@@ -48,8 +50,6 @@ const Home = () => {
           <S.StatsText>{monthlyStats ? `${monthlyStats}` : "데이터가 없습니다."}</S.StatsText>
         </S.StatsContainer>
       </S.StatsWrapper>
-
-      <QuickAddRecord />
     </S.Container>
   );
 };
