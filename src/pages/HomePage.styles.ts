@@ -5,6 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  gap: 16px;
 `;
 
 export const Title = styled.h1`
@@ -23,67 +24,35 @@ export const ErrorMessage = styled.p`
   color: red;
 `;
 
-export const GoalButton = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
-
-export const ToastContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-export const GoalInput = styled.input`
-  padding: 5px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-export const ButtonContainer = styled.div`
+export const StatsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  width: 100%;
+  gap: 16px;
 `;
 
-export const SaveButton = styled.button`
-  padding: 8px 15px;
-  font-size: 14px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  white-space: nowrap;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #218838;
-  }
+export const StatsContainer = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
 `;
 
-export const CancelButton = styled.button`
-  padding: 8px 15px;
-  font-size: 14px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  white-space: nowrap;
-  cursor: pointer;
+export const StatsTitle = styled.h3`
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+`;
 
-  &:hover {
-    background-color: #c82333;
-  }
+export const StatsText = styled.p`
+  font-size: 16px;
+  font-weight: normal;
+  color: #555;
 `;

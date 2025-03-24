@@ -2,7 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { useAddRecord } from "../hooks/useRecords";
 
-import * as S from "./QuickAddREcord.styles";
+import * as S from "./QuickAddRecord.styles";
 
 const QuickAddRecord = () => {
   const [count, setCount] = useState(0);
@@ -24,7 +24,7 @@ const QuickAddRecord = () => {
   };
 
   return (
-    <S.Container>
+    <S.QuickAddContainer>
       <S.Input
         type="number"
         value={count}
@@ -32,7 +32,7 @@ const QuickAddRecord = () => {
         min={1}
       />
       <S.AddButton onClick={handleAddRecord}>빠른 기록 추가</S.AddButton>
-    </S.Container>
+    </S.QuickAddContainer>
   );
 };
 
