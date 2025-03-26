@@ -31,6 +31,11 @@ export const AddRecordButton = styled.button`
   &:active {
     background-color: #388e3c;
   }
+
+  &:disabled {
+    background-color: #a5d6a7;
+    cursor: default;
+  }
 `;
 
 export const ResetButton = styled.button`
