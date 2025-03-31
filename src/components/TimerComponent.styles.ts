@@ -38,7 +38,7 @@ export const ProgressBar = styled.div<ProgressBarProps>`
   height: 100%;
   width: ${(props) => props.$progress}%;
   background-color: ${(props) => props.$barColor};
-  transition: width 1s ease-in-out, background-color 0.5s ease-in-out;
+  transition: width 1s linear, background-color 0.5s ease-in-out;
 `;
 
 export const ButtonContainer = styled.div`
