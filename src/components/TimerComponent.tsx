@@ -12,7 +12,7 @@ const TimerComponent = ({
 }) => {
   const [seconds, setSeconds] = useState(60);
   const [progress, setProgress] = useState(100);
-  const [totalCount, setTotalCount] = useState(currentCount);
+  const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
     if (seconds > 0) {
@@ -26,28 +26,30 @@ const TimerComponent = ({
 
       return () => clearTimeout(timer);
     } else {
-      onTimerEnd();
+      setIsFinished(true);
     }
-  }, [seconds, onTimerEnd]);
-
-  const barColor = seconds <= 10 ? "red" : "green";
-
-  useEffect(() => {
-    setTotalCount(currentCount);
-  }, [currentCount]);
+  }, [seconds]);
 
   return (
-    <S.ProgressBarContainer>
-      <p>누적된 팔굽혀펴기 횟수: {totalCount}회</p> {/* 타이머 화면에 누적된 count 표시 */}
-      <S.TimerText>{seconds}초 남음</S.TimerText>
-      <S.ProgressBarBackground>
-        <S.ProgressBar $progress={progress} $barColor={barColor} />
-      </S.ProgressBarBackground>
+    <S.Container>
+      {!isFinished ? (
+        <>
+          <S.TimerWrapper>
+            <S.Circle $progress={progress}>
+              <S.CircleText>{seconds}초</S.CircleText>
+            </S.Circle>
+          </S.TimerWrapper>
+          <S.CounterText>누적 횟수: {currentCount}회</S.CounterText>
+        </>
+      ) : (
+        <S.EndMessage>휴식이 끝났습니다!</S.EndMessage>
+      )}
+
       <S.ButtonContainer>
-        <button onClick={onTimerEnd}>시작하기</button>
-        <button onClick={onRecordButton}>기록하기</button>
+        <S.ActionButton onClick={onTimerEnd}>운동 더하기</S.ActionButton>
+        <S.RecordButton onClick={onRecordButton}>기록하기</S.RecordButton>
       </S.ButtonContainer>
-    </S.ProgressBarContainer>
+    </S.Container>
   );
 };
 

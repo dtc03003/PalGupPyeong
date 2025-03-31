@@ -1,44 +1,71 @@
 import styled from "styled-components";
 
-interface ProgressBarProps {
+interface CircleProgressProps {
   $progress: number;
-  $barColor: string;
 }
 
-export const ProgressBarContainer = styled.div`
-  width: 100%;
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  width: 100%;
   padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 10px;
+  background: #ffffff;
+  border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
-export const ProgressBarBackground = styled.div`
-  width: 90%;
-  height: 25px;
-  background-color: #ddd;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-top: 10px;
+export const TimerWrapper = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
 `;
 
-export const TimerText = styled.h2`
+export const Circle = styled.div<CircleProgressProps>`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    #4caf50 ${(props) => props.$progress}%,
+    #ddd ${(props) => props.$progress}%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CircleText = styled.span`
+  position: absolute;
   font-size: 24px;
   font-weight: bold;
-  color: #222;
-  margin-bottom: 10px;
+  color: #333;
 `;
 
-export const ProgressBar = styled.div<ProgressBarProps>`
-  height: 100%;
-  width: ${(props) => props.$progress}%;
-  background-color: ${(props) => props.$barColor};
-  transition: width 1s linear, background-color 0.5s ease-in-out;
+export const CircleProgress = styled.div<CircleProgressProps>`
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  background: #fff;
+  border-radius: 50%;
+`;
+
+export const CounterText = styled.p`
+  font-size: 18px;
+  font-weight: bold;
+  color: #666;
+  margin-top: 15px;
+`;
+
+export const EndMessage = styled.p`
+  font-size: 22px;
+  font-weight: bold;
+  color: #d32f2f;
+  margin-bottom: 20px;
 `;
 
 export const ButtonContainer = styled.div`
@@ -47,7 +74,7 @@ export const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-export const TimerButton = styled.button`
+export const ActionButton = styled.button`
   background-color: #4caf50;
   color: white;
   font-size: 16px;
@@ -66,7 +93,7 @@ export const TimerButton = styled.button`
   }
 `;
 
-export const RecordButton = styled(TimerButton)`
+export const RecordButton = styled(ActionButton)`
   background-color: #2196f3;
 
   &:hover {
