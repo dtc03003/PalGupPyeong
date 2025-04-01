@@ -21,8 +21,8 @@ export const TimerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
-  height: 150px;
+  width: 80%;
+  aspect-ratio: 1;
 `;
 
 export const Circle = styled.div<CircleProgressProps>`
@@ -41,9 +41,18 @@ export const Circle = styled.div<CircleProgressProps>`
 
 export const CircleText = styled.span`
   position: absolute;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  background: #fff;
   font-size: 24px;
   font-weight: bold;
   color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  user-select: none;
 `;
 
 export const CircleProgress = styled.div<CircleProgressProps>`
@@ -62,10 +71,7 @@ export const CounterText = styled.p`
 `;
 
 export const EndMessage = styled.p`
-  font-size: 22px;
-  font-weight: bold;
   color: #d32f2f;
-  margin-bottom: 20px;
 `;
 
 export const ButtonContainer = styled.div`

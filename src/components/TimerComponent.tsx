@@ -32,18 +32,16 @@ const TimerComponent = ({
 
   return (
     <S.Container>
-      {!isFinished ? (
-        <>
-          <S.TimerWrapper>
-            <S.Circle $progress={progress}>
-              <S.CircleText>{seconds}초</S.CircleText>
-            </S.Circle>
-          </S.TimerWrapper>
-          <S.CounterText>누적 횟수: {currentCount}회</S.CounterText>
-        </>
-      ) : (
-        <S.EndMessage>휴식이 끝났습니다!</S.EndMessage>
-      )}
+      <>
+        <S.TimerWrapper>
+          <S.Circle $progress={progress}>
+            <S.CircleText>
+              {!isFinished ? <>{seconds}초</> : <S.EndMessage>휴식 끝!</S.EndMessage>}
+            </S.CircleText>
+          </S.Circle>
+        </S.TimerWrapper>
+        <S.CounterText>누적 횟수: {currentCount}회</S.CounterText>
+      </>
 
       <S.ButtonContainer>
         <S.ActionButton onClick={onTimerEnd}>운동 더하기</S.ActionButton>
