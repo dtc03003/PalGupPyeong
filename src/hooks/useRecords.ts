@@ -13,6 +13,7 @@ import {
   startAfter,
   QueryDocumentSnapshot,
   getDoc,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "../api/firebase";
 import { auth } from "../api/firebase";
@@ -54,6 +55,7 @@ export const useRecords = (page: number, pageSize: number) => {
 
       const recordsQuery = query(
         recordsRef,
+        orderBy("createdAt", "desc"),
         limit(pageSize),
         ...(lastVisibleDoc ? [startAfter(lastVisibleDoc)] : [])
       );

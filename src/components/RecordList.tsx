@@ -65,7 +65,10 @@ const RecordList = () => {
   return (
     <div>
       <ResponsiveContainer width="100%" height={260}>
-        <LineChart data={records} margin={{ top: 30, right: 30, left: 0, bottom: 5 }}>
+        <LineChart
+          data={records ? [...records].reverse() : []}
+          margin={{ top: 30, right: 30, left: 0, bottom: 5 }}
+        >
           <XAxis dataKey="createdAt" tickFormatter={formatDate} />
           <YAxis width={30} />
           <Tooltip
