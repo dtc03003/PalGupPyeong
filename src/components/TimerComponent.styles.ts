@@ -10,7 +10,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 20px;
+  padding-bottom: 20px;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -21,14 +21,14 @@ export const TimerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 100%;
   aspect-ratio: 1;
 `;
 
 export const Circle = styled.div<CircleProgressProps>`
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  aspect-ratio: 1;
   border-radius: 50%;
   background: conic-gradient(
     #4caf50 ${(props) => props.$progress}%,
@@ -41,8 +41,8 @@ export const Circle = styled.div<CircleProgressProps>`
 
 export const CircleText = styled.span`
   position: absolute;
-  width: 90%;
-  height: 90%;
+  width: 95%;
+  aspect-ratio: 1;
   border-radius: 50%;
   background: #fff;
   font-size: 24px;
