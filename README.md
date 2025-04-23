@@ -48,3 +48,83 @@ export default tseslint.config({
   },
 })
 ```
+
+```
+PalGupPyeong
+├─ eslint.config.js
+├─ index.html
+├─ package-lock.json
+├─ package.json
+├─ README.md
+├─ src
+│  ├─ api
+│  │  └─ firebase.ts
+│  ├─ App.tsx
+│  ├─ assets
+│  │  ├─ icons
+│  │  │  ├─ btn_eye_off.svg
+│  │  │  ├─ btn_eye_on.svg
+│  │  │  ├─ icon_hamburger.svg
+│  │  │  └─ icon_setting.svg
+│  │  └─ images
+│  │     ├─ logo_PalGupPyeong.png
+│  │     └─ pushup.gif
+│  ├─ components
+│  │  ├─ layout
+│  │  │  ├─ Layout.tsx
+│  │  │  ├─ NavBar.styles.ts
+│  │  │  ├─ NavBar.tsx
+│  │  │  ├─ SideMenu.styles.ts
+│  │  │  └─ SideMenu.tsx
+│  │  ├─ PrivateRoute.tsx
+│  │  ├─ PublicRoute.tsx
+│  │  ├─ record
+│  │  │  ├─ DailyProgress.styles.ts
+│  │  │  ├─ DailyProgress.tsx
+│  │  │  ├─ QuickAddRecord.styles.ts
+│  │  │  ├─ QuickAddRecord.tsx
+│  │  │  ├─ RecordList.styles.ts
+│  │  │  └─ RecordList.tsx
+│  │  ├─ rotaryDial
+│  │  │  ├─ RotaryDial.styles.ts
+│  │  │  ├─ RotaryDial.tsx
+│  │  │  ├─ RotaryDialRecordForm.styles.ts
+│  │  │  └─ RotaryDialRecordForm.tsx
+│  │  └─ timer
+│  │     ├─ TimerComponent.styles.ts
+│  │     └─ TimerComponent.tsx
+│  ├─ hooks
+│  │  ├─ useAuth.ts
+│  │  ├─ useDailyGoal.ts
+│  │  ├─ useGetDailyRecords.ts
+│  │  ├─ useGetMonthlyRecords.ts
+│  │  ├─ useGetWeeklyRecords.ts
+│  │  └─ useRecords.ts
+│  ├─ main.tsx
+│  ├─ pages
+│  │  ├─ Auth
+│  │  │  ├─ AuthPage.styles.ts
+│  │  │  └─ AuthPage.tsx
+│  │  ├─ Error
+│  │  │  ├─ ErrorPage.styles.ts
+│  │  │  └─ ErrorPage.tsx
+│  │  ├─ Home
+│  │  │  ├─ HomePage.styles.ts
+│  │  │  └─ HomePage.tsx
+│  │  ├─ MyRecords
+│  │  │  └─ MyRecordsPage.tsx
+│  │  └─ Record
+│  │     └─ RecordPage.tsx
+│  ├─ styles
+│  │  ├─ GlobalStyles.ts
+│  │  └─ theme.ts
+│  ├─ svg.d.ts
+│  ├─ utils
+│  │  └─ dateUtils.ts
+│  └─ vite-env.d.ts
+├─ tsconfig.app.json
+├─ tsconfig.json
+├─ tsconfig.node.json
+└─ vite.config.ts
+
+```

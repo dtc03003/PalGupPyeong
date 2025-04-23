@@ -15,9 +15,9 @@ import {
   getDoc,
   orderBy,
 } from "firebase/firestore";
-import { db } from "../api/firebase";
-import { auth } from "../api/firebase";
-import { getDayKey, getMonthKey, getWeekKey } from "../utils/dateUtils";
+import { db } from "@api/firebase";
+import { auth } from "@api/firebase";
+import { getDayKey, getMonthKey, getWeekKey } from "@utils/dateUtils";
 
 interface PushupRecord {
   count: number;

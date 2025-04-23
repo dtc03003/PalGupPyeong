@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../api/firebase";
-import { getWeekKey } from "../utils/dateUtils";
+import { auth, db } from "@api/firebase";
+import { getWeekKey } from "@utils/dateUtils";
 
 export const useGetWeeklyRecords = () => {
   return useQuery({

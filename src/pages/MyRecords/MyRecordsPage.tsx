@@ -1,4 +1,4 @@
-import RecordList from "../components/RecordList"
+import RecordList from "@components/record/RecordList";
 
 const RecordListPage = () => {
     return (

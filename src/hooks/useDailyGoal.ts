@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../api/firebase";
+import { auth, db } from "@api/firebase";
 
 // 일일 목표량 설정
 export const useSetDailyGoal = () => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useRecords, useDeleteRecord, useUpdateRecord } from "../hooks/useRecords";
-import { formatDate } from "../utils/dateUtils";
+import { useRecords, useDeleteRecord, useUpdateRecord } from "@hooks/useRecords";
+import { formatDate } from "@utils/dateUtils";
 import { toast } from "react-toastify";
 import { LineChart, XAxis, YAxis, Tooltip, ResponsiveContainer, Line } from "recharts";
 

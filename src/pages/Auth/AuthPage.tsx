@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { login, signup } from "../hooks/useAuth";
-import BtnEyeOff from "../assets/btn_eye_off.svg?react";
-import BtnEyeON from "../assets/btn_eye_on.svg?react";
+import { login, signup } from "@hooks/useAuth";
+import BtnEyeOff from "@assets/icons/icon_eye_off.svg?react";
+import BtnEyeON from "@assets/icons/icon_eye_on.svg?react";
 import * as S from "./AuthPage.styles";
 
 const AuthPage = () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { logout, useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import { logout, useAuth } from "@hooks/useAuth";
 import * as S from "./SideMenu.styles";
 
 interface SideMenuProps {

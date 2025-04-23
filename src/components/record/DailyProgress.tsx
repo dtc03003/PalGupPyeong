@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { useSetDailyGoal, useGetDailyGoal } from "../hooks/useDailyGoal";
-import * as S from "./DailyProgress.styles";
+import { useSetDailyGoal, useGetDailyGoal } from "@hooks/useDailyGoal";
+import * as S from "./DailyProgress.styles"
 
 interface DailyProgressProps {
   total: number;
