@@ -1,9 +1,9 @@
-import { useGetDailyRecords } from "../hooks/useGetDailyRecords";
-import { useGetWeeklyRecords } from "../hooks/useGetWeeklyRecords";
-import { useGetMonthlyRecords } from "../hooks/useGetMonthlyRecords";
+import { useGetDailyRecords } from "@hooks/useGetDailyRecords";
+import { useGetWeeklyRecords } from "@hooks/useGetWeeklyRecords";
+import { useGetMonthlyRecords } from "@hooks/useGetMonthlyRecords";
 
-import DailyProgress from "../components/DailyProgress";
-import QuickAddRecord from "../components/QuickAddRecord";
+import DailyProgress from "@components/record/DailyProgress";
+import QuickAddRecord from "@components/record/QuickAddRecord";
 
 import * as S from "./HomePage.styles";
 

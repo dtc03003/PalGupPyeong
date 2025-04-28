@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useAddRecord } from "../hooks/useRecords";
+import { useAddRecord } from "@hooks/useRecords";
 
 import * as S from "./QuickAddRecord.styles";
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useAddRecord } from "../hooks/useRecords";
-import RotaryDialRecordForm from "../components/RotaryDialRecordForm";
-import TimerComponent from "../components/TimerComponent";
+import { useAddRecord } from "@hooks/useRecords";
+import RotaryDialRecordForm from "@components/rotaryDial/RotaryDialRecordForm";
+import TimerComponent from "@components/timer/TimerComponent";
 import { useNavigate } from "react-router-dom";
 
 const RecordsPage = () => {

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import HamburgerIcon from "../assets/icon_hamburger.svg?react";
+import HamburgerIcon from "@assets/icons/icon_menu.svg?react";
 
 export const NavBar = styled.div`
   position: relative;

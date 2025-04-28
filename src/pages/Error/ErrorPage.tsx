@@ -1,5 +1,5 @@
 import * as S from "./ErrorPage.styles";
-import pushupGif from "../assets/pushup.gif";
+import pushupGif from "@assets/images/img_pushup.gif";
 
 const ErrorPage = () => {
     return (

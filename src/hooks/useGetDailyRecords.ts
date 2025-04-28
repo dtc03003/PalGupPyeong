@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../api/firebase";
+import { auth, db } from "@api/firebase";
 
 export const useGetDailyRecords = () => {
   return useQuery({

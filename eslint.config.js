@@ -3,6 +3,8 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
+import eslintPluginImport from 'eslint-plugin-import'
+import importResolverTypeScript from 'eslint-import-resolver-typescript'
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -16,6 +18,14 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      import: eslintPluginImport,
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './tsconfig.json',
+        },
+      },
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -24,5 +34,5 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
     },
-  },
+  }
 )

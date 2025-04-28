@@ -29,7 +29,9 @@ const RotaryDialRecordForm = ({ onConfirm }: { onConfirm: (count: number) => voi
     <S.RotaryDialRecordForm>
       <RotaryDial ref={rotaryDialRef} onRotationChange={handleRotationChange} />
       <S.ButtonContainer>
-        <S.AddRecordButton onClick={handleSubmit}>쉬기</S.AddRecordButton>
+        <S.AddRecordButton onClick={handleSubmit} disabled={count === 0}>
+          쉬기
+        </S.AddRecordButton>
         <S.ResetButton onClick={handleReset}>0</S.ResetButton>
       </S.ButtonContainer>
     </S.RotaryDialRecordForm>

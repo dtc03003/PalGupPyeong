@@ -1,13 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 
-import NavBar from "./components/NavBar";
-import Layout from "./components/Layout";
-import HomePage from "./pages/HomePage";
-import AuthPage from "./pages/AuthPage";
-import RecordsPage from "./pages/RecordPage";
-import MyRecordsPage from "./pages/MyRecordsPage";
-import ErrorPage from "./pages/ErrorPage";
+import NavBar from "./components/layout/NavBar";
+import Layout from "./components/layout/Layout";
+import HomePage from "./pages/Home/HomePage";
+import AuthPage from "./pages/Auth/AuthPage";
+import RecordsPage from "./pages/Record/RecordPage";
+import MyRecordsPage from "./pages/MyRecords/MyRecordsPage";
+import ErrorPage from "./pages/Error/ErrorPage";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Setting from "../assets/icon_setting.svg?react";
+import Setting from "@assets/icons/icon_settings.svg?react";
 
 export const Container = styled.div`
   width: 100%;
@@ -67,10 +67,10 @@ export const ProgressFill = styled.div<{ $progress: number }>`
     $progress >= 75
       ? "#2e7d32"
       : $progress >= 50
-      ? "#4caf50"
-      : $progress >= 25
-      ? "#ffb74d"
-      : "#ff5722"};
+        ? "#4caf50"
+        : $progress >= 25
+          ? "#ffb74d"
+          : "#ff5722"};
   transition: width 0.3s ease-in-out;
 `;
 
