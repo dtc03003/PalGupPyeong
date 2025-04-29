@@ -35,4 +35,9 @@ export const AddButton = styled.button`
   &:hover {
     background-color: #0056b3;
   }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: default
+  }
 `;

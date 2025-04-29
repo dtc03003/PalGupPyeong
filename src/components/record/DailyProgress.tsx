@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useSetDailyGoal, useGetDailyGoal } from "@hooks/useDailyGoal";
-import * as S from "./DailyProgress.styles"
+import * as S from "./DailyProgress.styles";
+
+const TOAST_ID_DAILY_GOAL = "daily-goal-setting";
 
 interface DailyProgressProps {
   total: number;
@@ -9,31 +11,22 @@ interface DailyProgressProps {
 
 const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
   const { data: goal = 0, isLoading } = useGetDailyGoal();
-  const newGoalRef = useRef<number>(goal);
   const setDailyGoal = useSetDailyGoal();
+  const newGoalRef = useRef<number>(goal);
 
   useEffect(() => {
     newGoalRef.current = goal;
   }, [goal]);
 
-  if (isLoading) {
-    return <S.Message>목표를 불러오는 중...</S.Message>;
-  }
+  if (isLoading) return <S.Message>목표를 불러오는 중...</S.Message>;
 
   const progress = goal > 0 ? Math.min((total / goal) * 100, 100) : 0;
-
-  const getMotivationalMessage = (progress: number) => {
-    if (progress === 0) return "시작이 반! 가볍게 한 세트 해볼까요? 💪";
-    if (progress < 25) return "좋아요! 목표를 향해 천천히 나아가고 있어요! 🚶";
-    if (progress < 50) return "절반 가까이 왔어요! 계속 힘내봐요! 💥";
-    if (progress < 75) return "좋아요! 이제 목표의 절반을 넘었어요! 🔥";
-    if (progress < 100) return "거의 다 왔어요! 끝까지 밀어붙여요! 🏁";
-    return "축하합니다! 목표를 달성했어요! 🎉";
-  };
 
   const message = getMotivationalMessage(progress);
 
   const handleSetGoal = () => {
+    if (toast.isActive(TOAST_ID_DAILY_GOAL)) return;
+
     toast(
       ({ closeToast }) => (
         <S.ToastContainer>
@@ -63,7 +56,11 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
           </S.ButtonContainer>
         </S.ToastContainer>
       ),
-      { autoClose: false, closeOnClick: false }
+      {
+        autoClose: false,
+        closeOnClick: false,
+        toastId: TOAST_ID_DAILY_GOAL,
+      }
     );
   };
 
@@ -72,20 +69,29 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
       <S.Header>
         <S.SettingBtn onClick={handleSetGoal} />
       </S.Header>
+
       <S.ProgressText>
         <span>오늘의 진행률</span>
-        <strong>
-          {total} / {goal} 회
-        </strong>
+        <strong>{total} / {goal} 회</strong>
       </S.ProgressText>
 
       <S.ProgressBar>
         <S.ProgressFill $progress={progress} />
       </S.ProgressBar>
+
       <S.Percentage>{progress.toFixed(1)}%</S.Percentage>
       <S.Message>{message}</S.Message>
     </S.Container>
   );
 };
+
+function getMotivationalMessage(progress: number) {
+  if (progress === 0) return "시작이 반! 가볍게 한 세트 해볼까요? 💪";
+  if (progress < 25) return "좋아요! 목표를 향해 천천히 나아가고 있어요! 🚶";
+  if (progress < 50) return "절반 가까이 왔어요! 계속 힘내봐요! 💥";
+  if (progress < 75) return "좋아요! 이제 목표의 절반을 넘었어요! 🔥";
+  if (progress < 100) return "거의 다 왔어요! 끝까지 밀어붙여요! 🏁";
+  return "축하합니다! 목표를 달성했어요! 🎉";
+}
 
 export default DailyProgress;
