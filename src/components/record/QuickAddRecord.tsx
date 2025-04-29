@@ -9,13 +9,19 @@ const QuickAddRecord = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const addRecord = useAddRecord();
 
-  const handleAddRecord = async () => {
-    if (isSubmitting) return;
+  const validateInput = (count: number, isSubmitting: boolean) => {
+    if (isSubmitting) return false;
 
     if (count <= 0) {
       toast.error("1개 이상의 개수를 입력하세요.");
-      return;
+      return false;
     }
+
+    return true;
+  };
+
+  const handleAddRecord = async () => {
+    if (!validateInput(count, isSubmitting)) return;
 
     setIsSubmitting(true);
     try {
