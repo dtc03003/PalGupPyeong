@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useSetDailyGoal, useGetDailyGoal } from "@hooks/useDailyGoal";
+import ConfirmToast from "@components/toast/ConfirmToast";
 import * as S from "./DailyProgress.styles";
 
 const TOAST_ID_DAILY_GOAL = "daily-goal-setting";
@@ -27,34 +28,31 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
   const handleSetGoal = () => {
     if (toast.isActive(TOAST_ID_DAILY_GOAL)) return;
 
+    const goalRef = { current: goal };
+
     toast(
       ({ closeToast }) => (
-        <S.ToastContainer>
-          <p>하루 목표 설정</p>
+        <ConfirmToast
+          message="하루 목표 설정"
+          confirmText="저장"
+          closeToast={closeToast}
+          onConfirm={async () => {
+            try {
+              await setDailyGoal.mutateAsync(goalRef.current);
+              toast.success("목표가 저장되었습니다!");
+            } catch {
+              toast.error("목표 저장에 실패했습니다. 다시 시도해주세요.");
+            }
+          }}
+        >
           <S.GoalInput
             type="number"
             defaultValue={goal}
             onChange={(e) => {
-              newGoalRef.current = Number(e.target.value);
+              goalRef.current = Number(e.target.value);
             }}
           />
-          <S.ButtonContainer>
-            <S.SaveButton
-              onClick={async () => {
-                try {
-                  await setDailyGoal.mutateAsync(newGoalRef.current);
-                  toast.success("목표가 저장되었습니다!");
-                  closeToast();
-                } catch {
-                  toast.error("목표 저장에 실패했습니다. 다시 시도해주세요.");
-                }
-              }}
-            >
-              저장
-            </S.SaveButton>
-            <S.CancelButton onClick={closeToast}>취소</S.CancelButton>
-          </S.ButtonContainer>
-        </S.ToastContainer>
+        </ConfirmToast>
       ),
       {
         autoClose: false,
@@ -72,7 +70,9 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
 
       <S.ProgressText>
         <span>오늘의 진행률</span>
-        <strong>{total} / {goal} 회</strong>
+        <strong>
+          {total} / {goal} 회
+        </strong>
       </S.ProgressText>
 
       <S.ProgressBar>
