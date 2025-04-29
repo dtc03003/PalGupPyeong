@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import * as S from "./ConfirmToast.styles";
+import LoadingButton from "@components/common/LoadingButton";
 
 interface ConfirmToastProps {
   message: string;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void> | void;
   onCancel?: () => void;
   confirmText?: string;
   cancelText?: string;
@@ -20,27 +21,42 @@ const ConfirmToast: React.FC<ConfirmToastProps> = ({
   closeToast,
   children,
 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+      await onConfirm();
+      closeToast?.();
+    } catch {
+      setLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    onCancel?.();
+    closeToast?.();
+  };
+
   return (
     <S.ToastContainer>
       <p>{message}</p>
       {children}
       <S.ButtonContainer>
-        <S.SaveButton
-          onClick={() => {
-            onConfirm();
-            closeToast?.();
-          }}
+        <LoadingButton
+          loading={loading}
+          variant="primary"
+          onClick={handleConfirm}
         >
           {confirmText}
-        </S.SaveButton>
-        <S.CancelButton
-          onClick={() => {
-            onCancel?.();
-            closeToast?.();
-          }}
+        </LoadingButton>
+        <LoadingButton
+          disabled={loading}
+          variant="danger"
+          onClick={handleCancel}
         >
           {cancelText}
-        </S.CancelButton>
+        </LoadingButton>
       </S.ButtonContainer>
     </S.ToastContainer>
   );
