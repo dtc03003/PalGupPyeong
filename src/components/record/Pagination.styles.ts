@@ -3,25 +3,41 @@ import styled from "styled-components";
 export const Pagination = styled.div`
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  flex-wrap: wrap;
 
-  button {
-    padding: 8px 16px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+  button,
+  span {
+    padding: 6px 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: none;
     cursor: pointer;
-    background-color: #f8f9fa;
-    transition: background-color 0.2s;
+    min-width: 36px;
+    text-align: center;
+    background-color: #f1f3f5;
+    transition: background-color 0.2s, color 0.2s;
+  }
 
-    &:hover {
-      background-color: #e9ecef;
-    }
+  button:hover:not(:disabled) {
+    background-color: #e0e0e0;
+  }
 
-    &:disabled {
-      background-color: #dee2e6;
-      cursor: not-allowed;
-    }
+  button:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  .active {
+    background-color: #339af0;
+    color: white;
+    font-weight: bold;
+  }
+
+  span {
+    cursor: default;
+    color: #868e96;
   }
 `;

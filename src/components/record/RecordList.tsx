@@ -25,7 +25,7 @@ interface RecordListProps {
   updateRecord: UseMutationResult<void, Error, UpdateRecordData>;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  isLastPage: boolean;
+  totalPages: number;
 }
 
 const RecordList = ({
@@ -34,7 +34,7 @@ const RecordList = ({
   updateRecord,
   page,
   setPage,
-  isLastPage,
+  totalPages,
 }: RecordListProps) => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [newCount, setNewCount] = useState<number>(0);
@@ -55,7 +55,7 @@ const RecordList = ({
           />
         ))}
       </S.RecordList>
-      <Pagination page={page} setPage={setPage} isLastPage={isLastPage} />
+      <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </div>
   );
 };

@@ -15,12 +15,16 @@ import {
   QueryDocumentSnapshot,
   getDoc,
   orderBy,
+  getCountFromServer,
 } from "firebase/firestore";
 import { db, auth } from "@api/firebase";
 import { updateAllAggregates } from "@utils/aggregateUtils";
 
-interface PushupRecord {
+interface AddRecord {
   count: number;
+}
+
+interface PushupRecord extends AddRecord {
   createdAt: Timestamp;
 }
 
@@ -43,16 +47,23 @@ export const useRecords = (page: number, pageSize: number) => {
   const [lastVisibleDocs, setLastVisibleDocs] = useState<
     QueryDocumentSnapshot[]
   >([]);
+  const [totalPages, setTotalPages] = useState<number | null>(null);
 
-  return useQuery<RecordData[]>({
+  const queryResult = useQuery<RecordData[], Error>({
     queryKey: ["pushupRecords", page],
     queryFn: async () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
       const recordsRef = collection(db, "pushupRecords", user.uid, "records");
-      const lastVisibleDoc = page > 1 ? lastVisibleDocs[page - 2] : null;
 
+      if (totalPages === null) {
+        const snapshot = await getCountFromServer(recordsRef);
+        const totalCount = snapshot.data().count;
+        setTotalPages(Math.ceil(totalCount / pageSize));
+      }
+
+      const lastVisibleDoc = page > 1 ? lastVisibleDocs[page - 2] : null;
       if (page > 1 && !lastVisibleDoc)
         throw new Error("이전 페이지 데이터를 로드하지 못했습니다.");
 
@@ -82,7 +93,13 @@ export const useRecords = (page: number, pageSize: number) => {
         };
       });
     },
+    staleTime: 1000 * 60,
   });
+
+  return {
+    ...queryResult,
+    totalPages,
+  };
 };
 
 // 기록 추가
@@ -90,7 +107,7 @@ export const useAddRecord = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newRecord: PushupRecord) => {
+    mutationFn: async (newRecord: AddRecord) => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 

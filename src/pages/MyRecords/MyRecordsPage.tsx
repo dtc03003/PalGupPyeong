@@ -10,13 +10,11 @@ import RecordList from "@components/record/RecordList";
 const RecordListPage = () => {
   const [page, setPage] = useState(1);
   const pageSize = 10;
-  const { data: records, isLoading } = useRecords(page, pageSize);
+  const { data: records, isLoading, totalPages } = useRecords(page, pageSize);
   const deleteRecord = useDeleteRecord();
   const updateRecord = useUpdateRecord();
 
-  const isLastPage = !records || records.length < pageSize;
-
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading || totalPages == null) return <p>Loading...</p>;
 
   return (
     <>
@@ -25,7 +23,7 @@ const RecordListPage = () => {
         records={records ?? []}
         page={page}
         setPage={setPage}
-        isLastPage={isLastPage}
+        totalPages={totalPages}
         deleteRecord={deleteRecord}
         updateRecord={updateRecord}
       />
