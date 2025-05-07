@@ -1,4 +1,3 @@
-// hooks/usePushupRecords.ts
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -16,9 +15,11 @@ import {
   getDoc,
   orderBy,
   getCountFromServer,
+  DocumentData,
 } from "firebase/firestore";
 import { db, auth } from "@api/firebase";
 import { updateAllAggregates } from "@utils/aggregateUtils";
+import { parseWeekIdToDate } from "@utils/weeklyUtils";
 
 interface AddRecord {
   count: number;
@@ -42,45 +43,65 @@ interface UpdateRecordData {
   };
 }
 
+type ViewType = "records" | "daily" | "weekly" | "monthly";
+
+type LastVisibleMap = {
+  [key in ViewType]?: QueryDocumentSnapshot<DocumentData>[];
+};
+
+type TotalPagesMap = {
+  [key in ViewType]?: number;
+};
+
 // 기록 조회
-export const useRecords = (page: number, pageSize: number) => {
-  const [lastVisibleDocs, setLastVisibleDocs] = useState<
-    QueryDocumentSnapshot[]
-  >([]);
-  const [totalPages, setTotalPages] = useState<number | null>(null);
+export const useRecords = (
+  viewType: ViewType,
+  page: number,
+  pageSize: number
+) => {
+  const [lastVisibleDocsMap, setLastVisibleDocsMap] = useState<LastVisibleMap>(
+    {}
+  );
+  const [totalPagesMap, setTotalPagesMap] = useState<TotalPagesMap>({});
 
   const queryResult = useQuery<RecordData[], Error>({
-    queryKey: ["pushupRecords", page],
+    queryKey: ["pushupRecords", viewType, page],
     queryFn: async () => {
       const user = auth.currentUser;
-      if (!user) throw new Error("로그인된 사용자가 없습니다.");
+      if (!user) throw new Error("로그인이 필요합니다.");
 
-      const recordsRef = collection(db, "pushupRecords", user.uid, "records");
+      const recordsRef = collection(db, "pushupRecords", user.uid, viewType);
 
-      if (totalPages === null) {
+      if (!totalPagesMap[viewType]) {
         const snapshot = await getCountFromServer(recordsRef);
         const totalCount = snapshot.data().count;
-        setTotalPages(Math.ceil(totalCount / pageSize));
+        setTotalPagesMap((prev) => ({
+          ...prev,
+          [viewType]: Math.ceil(totalCount / pageSize),
+        }));
       }
 
+      const lastVisibleDocs = lastVisibleDocsMap[viewType] ?? [];
       const lastVisibleDoc = page > 1 ? lastVisibleDocs[page - 2] : null;
+
       if (page > 1 && !lastVisibleDoc)
         throw new Error("이전 페이지 데이터를 로드하지 못했습니다.");
 
       const recordsQuery = query(
         recordsRef,
-        orderBy("createdAt", "desc"),
+        orderBy("__name__", "desc"),
         limit(pageSize),
         ...(lastVisibleDoc ? [startAfter(lastVisibleDoc)] : [])
       );
 
       const querySnapshot = await getDocs(recordsQuery);
+
       if (!querySnapshot.empty) {
         const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisibleDocs((prev) => {
-          const updated = [...prev];
+        setLastVisibleDocsMap((prev) => {
+          const updated = [...(prev[viewType] ?? [])];
           updated[page - 1] = lastDoc;
-          return updated;
+          return { ...prev, [viewType]: updated };
         });
       }
 
@@ -88,8 +109,12 @@ export const useRecords = (page: number, pageSize: number) => {
         const data = doc.data();
         return {
           id: doc.id,
-          count: data.count,
-          createdAt: (data.createdAt as Timestamp).toDate(),
+          count: data.total ?? data.count,
+          createdAt: data.createdAt
+            ? (data.createdAt as Timestamp).toDate()
+            : viewType === "weekly"
+            ? parseWeekIdToDate(doc.id) ?? new Date()
+            : new Date(doc.id),
         };
       });
     },
@@ -98,7 +123,7 @@ export const useRecords = (page: number, pageSize: number) => {
 
   return {
     ...queryResult,
-    totalPages,
+    totalPages: totalPagesMap[viewType],
   };
 };
 

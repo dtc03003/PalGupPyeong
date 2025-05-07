@@ -20,15 +20,17 @@ interface UpdateRecordData {
 }
 
 interface RecordListProps {
+  viewType: "records" | "daily" | "weekly" | "monthly";
   records: Record[];
-  deleteRecord: UseMutationResult<void, Error, string>;
-  updateRecord: UseMutationResult<void, Error, UpdateRecordData>;
+  deleteRecord?: UseMutationResult<void, Error, string>;
+  updateRecord?: UseMutationResult<void, Error, UpdateRecordData>;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   totalPages: number;
 }
 
 const RecordList = ({
+  viewType,
   records,
   deleteRecord,
   updateRecord,
@@ -45,6 +47,7 @@ const RecordList = ({
         {records?.map((record) => (
           <RecordItem
             key={record.id}
+            viewType={viewType}
             record={record}
             deleteRecord={deleteRecord}
             updateRecord={updateRecord}

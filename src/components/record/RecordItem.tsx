@@ -1,7 +1,6 @@
-// RecordItem.tsx
 import { toast } from "react-toastify";
 import { UseMutationResult } from "@tanstack/react-query";
-import { formatDate } from "@utils/dateUtils";
+import { formatDate, formatWeekDate } from "@utils/dateUtils";
 
 interface UpdateRecordData {
   recordId: string;
@@ -12,9 +11,10 @@ interface UpdateRecordData {
 }
 
 interface RecordItemProps {
+  viewType: "records" | "daily" | "weekly" | "monthly";
   record: { id: string; count: number; createdAt: Date };
-  deleteRecord: UseMutationResult<void, Error, string>;
-  updateRecord: UseMutationResult<void, Error, UpdateRecordData>;
+  deleteRecord?: UseMutationResult<void, Error, string>;
+  updateRecord?: UseMutationResult<void, Error, UpdateRecordData>;
   setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
   editingId: string | null;
   setNewCount: React.Dispatch<React.SetStateAction<number>>;
@@ -22,6 +22,7 @@ interface RecordItemProps {
 }
 
 const RecordItem = ({
+  viewType,
   record,
   deleteRecord,
   updateRecord,
@@ -45,6 +46,7 @@ const RecordItem = ({
 
   const confirmDelete = async (id: string, closeToast: () => void) => {
     closeToast();
+    if (!deleteRecord) return;
 
     toast.promise(deleteRecord.mutateAsync(id), {
       pending: "삭제 중...",
@@ -54,11 +56,14 @@ const RecordItem = ({
   };
 
   const handleEdit = () => {
+    if (!updateRecord) return;
     setEditingId(record.id);
     setNewCount(record.count);
   };
 
   const handleUpdate = async () => {
+    if (!updateRecord) return;
+
     try {
       await updateRecord.mutateAsync({
         recordId: record.id,
@@ -84,14 +89,19 @@ const RecordItem = ({
             value={newCount}
             onChange={(e) => setNewCount(Number(e.target.value))}
           />
-          <button onClick={handleUpdate}>저장</button>
+          {updateRecord && <button onClick={handleUpdate}>저장</button>}
           <button onClick={handleCancel}>취소</button>
         </>
       ) : (
         <>
-          {record.count} 회 - {formatDate(record.createdAt)}
-          <button onClick={handleEdit}>수정</button>
-          <button onClick={() => handleDelete(record.id)}>삭제</button>
+          {record.count} 회 -{" "}
+          {viewType === "weekly"
+            ? formatWeekDate(record.createdAt)
+            : formatDate(record.createdAt)}
+          {updateRecord && <button onClick={handleEdit}>수정</button>}
+          {deleteRecord && (
+            <button onClick={() => handleDelete(record.id)}>삭제</button>
+          )}
         </>
       )}
     </li>
