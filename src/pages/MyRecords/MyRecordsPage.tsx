@@ -1,17 +1,16 @@
+import { useState } from "react";
 import {
   useRecords,
   useDeleteRecord,
   useUpdateRecord,
 } from "@hooks/useRecords";
-import { useState } from "react";
 import RecordChart from "@components/record/RecordChart";
 import RecordList from "@components/record/RecordList";
+import { ViewType } from "@components/record/type";
 
 const RecordListPage = () => {
   const [page, setPage] = useState(1);
-  const [viewType, setViewType] = useState<
-    "records" | "daily" | "weekly" | "monthly"
-  >("daily");
+  const [viewType, setViewType] = useState<ViewType>("daily");
   const pageSize = 10;
 
   const {
@@ -30,9 +29,7 @@ const RecordListPage = () => {
         value={viewType}
         onChange={(e) => {
           setPage(1);
-          setViewType(
-            e.target.value as "records" | "daily" | "weekly" | "monthly"
-          );
+          setViewType(e.target.value as ViewType);
         }}
       >
         <option value="records">기록들</option>

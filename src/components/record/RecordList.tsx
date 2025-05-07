@@ -2,25 +2,12 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { useState } from "react";
 import RecordItem from "./RecordItem";
 import Pagination from "./Pagination";
+import { Record, UpdateRecordData, ViewType } from "./type";
 
 import * as S from "./RecordList.styles";
 
-interface Record {
-  id: string;
-  count: number;
-  createdAt: Date;
-}
-
-interface UpdateRecordData {
-  recordId: string;
-  updatedData: {
-    count?: number;
-    date?: Date;
-  };
-}
-
 interface RecordListProps {
-  viewType: "records" | "daily" | "weekly" | "monthly";
+  viewType: ViewType;
   records: Record[];
   deleteRecord?: UseMutationResult<void, Error, string>;
   updateRecord?: UseMutationResult<void, Error, UpdateRecordData>;

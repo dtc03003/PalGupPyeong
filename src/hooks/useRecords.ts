@@ -20,6 +20,7 @@ import {
 import { db, auth } from "@api/firebase";
 import { updateAllAggregates } from "@utils/aggregateUtils";
 import { parseWeekIdToDate } from "@utils/weeklyUtils";
+import { Record } from "@components/record/type";
 
 interface AddRecord {
   count: number;
@@ -27,12 +28,6 @@ interface AddRecord {
 
 interface PushupRecord extends AddRecord {
   createdAt: Timestamp;
-}
-
-interface RecordData {
-  id: string;
-  count: number;
-  createdAt: Date;
 }
 
 interface UpdateRecordData {
@@ -64,7 +59,7 @@ export const useRecords = (
   );
   const [totalPagesMap, setTotalPagesMap] = useState<TotalPagesMap>({});
 
-  const queryResult = useQuery<RecordData[], Error>({
+  const queryResult = useQuery<Record[], Error>({
     queryKey: ["pushupRecords", viewType, page],
     queryFn: async () => {
       const user = auth.currentUser;

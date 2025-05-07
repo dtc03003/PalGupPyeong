@@ -1,17 +1,10 @@
 import { toast } from "react-toastify";
 import { UseMutationResult } from "@tanstack/react-query";
 import { formatDate, formatWeekDate } from "@utils/dateUtils";
-
-interface UpdateRecordData {
-  recordId: string;
-  updatedData: {
-    count?: number;
-    date?: Date;
-  };
-}
+import { UpdateRecordData, ViewType } from "./type";
 
 interface RecordItemProps {
-  viewType: "records" | "daily" | "weekly" | "monthly";
+  viewType: ViewType;
   record: { id: string; count: number; createdAt: Date };
   deleteRecord?: UseMutationResult<void, Error, string>;
   updateRecord?: UseMutationResult<void, Error, UpdateRecordData>;
