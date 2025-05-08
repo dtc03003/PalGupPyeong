@@ -4,6 +4,7 @@ import {
   useDeleteRecord,
   useUpdateRecord,
 } from "@hooks/useRecords";
+import { useTotalPages } from "@hooks/useTotalPages";
 import RecordChart from "@components/record/RecordChart";
 import RecordList from "@components/record/RecordList";
 import { ViewType } from "@components/record/type";
@@ -13,15 +14,16 @@ const RecordListPage = () => {
   const [viewType, setViewType] = useState<ViewType>("daily");
   const pageSize = 10;
 
-  const {
-    data: records,
-    isLoading,
-    totalPages,
-  } = useRecords(viewType, page, pageSize);
+  const { data: records, isLoading } = useRecords(viewType, page, pageSize);
+  const { totalPages, isLoading: isTotalPagesLoading } = useTotalPages(
+    viewType,
+    pageSize
+  );
+
   const deleteRecord = useDeleteRecord();
   const updateRecord = useUpdateRecord();
 
-  if (isLoading || totalPages == null) return <p>Loading...</p>;
+  if (isLoading || isTotalPagesLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -44,7 +46,7 @@ const RecordListPage = () => {
         records={records ?? []}
         page={page}
         setPage={setPage}
-        totalPages={totalPages}
+        totalPages={totalPages ?? 0}
         deleteRecord={viewType === "records" ? deleteRecord : undefined}
         updateRecord={viewType === "records" ? updateRecord : undefined}
       />

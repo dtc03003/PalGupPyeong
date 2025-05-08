@@ -14,7 +14,6 @@ import {
   QueryDocumentSnapshot,
   getDoc,
   orderBy,
-  getCountFromServer,
   DocumentData,
 } from "firebase/firestore";
 import { db, auth } from "@api/firebase";
@@ -44,20 +43,13 @@ type LastVisibleMap = {
   [key in ViewType]?: QueryDocumentSnapshot<DocumentData>[];
 };
 
-type TotalPagesMap = {
-  [key in ViewType]?: number;
-};
-
 // 기록 조회
 export const useRecords = (
   viewType: ViewType,
   page: number,
   pageSize: number
 ) => {
-  const [lastVisibleDocsMap, setLastVisibleDocsMap] = useState<LastVisibleMap>(
-    {}
-  );
-  const [totalPagesMap, setTotalPagesMap] = useState<TotalPagesMap>({});
+  const [lastVisibleDocs, setLastVisibleDocs] = useState<LastVisibleMap>({});
 
   const queryResult = useQuery<Record[], Error>({
     queryKey: ["pushupRecords", viewType, page],
@@ -66,60 +58,40 @@ export const useRecords = (
       if (!user) throw new Error("로그인이 필요합니다.");
 
       const recordsRef = collection(db, "pushupRecords", user.uid, viewType);
-
-      if (!totalPagesMap[viewType]) {
-        const snapshot = await getCountFromServer(recordsRef);
-        const totalCount = snapshot.data().count;
-        setTotalPagesMap((prev) => ({
-          ...prev,
-          [viewType]: Math.ceil(totalCount / pageSize),
-        }));
-      }
-
-      const lastVisibleDocs = lastVisibleDocsMap[viewType] ?? [];
-      const lastVisibleDoc = page > 1 ? lastVisibleDocs[page - 2] : null;
-
-      if (page > 1 && !lastVisibleDoc)
-        throw new Error("이전 페이지 데이터를 로드하지 못했습니다.");
+      const lastDocs = lastVisibleDocs[viewType] ?? [];
+      const prevLastDoc = page > 1 ? lastDocs[page - 2] : null;
 
       const recordsQuery = query(
         recordsRef,
         orderBy("__name__", "desc"),
-        limit(pageSize),
-        ...(lastVisibleDoc ? [startAfter(lastVisibleDoc)] : [])
+        ...(prevLastDoc ? [startAfter(prevLastDoc)] : []),
+        limit(pageSize)
       );
 
-      const querySnapshot = await getDocs(recordsQuery);
+      const snap = await getDocs(recordsQuery);
 
-      if (!querySnapshot.empty) {
-        const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisibleDocsMap((prev) => {
-          const updated = [...(prev[viewType] ?? [])];
-          updated[page - 1] = lastDoc;
-          return { ...prev, [viewType]: updated };
-        });
+      if (!snap.empty) {
+        const lastDoc = snap.docs[snap.docs.length - 1];
+        setLastVisibleDocs((prev) => ({
+          ...prev,
+          [viewType]: [...(prev[viewType] ?? []), lastDoc],
+        }));
       }
 
-      return querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          count: data.total ?? data.count,
-          createdAt: data.createdAt
-            ? (data.createdAt as Timestamp).toDate()
-            : viewType === "weekly"
-            ? parseWeekIdToDate(doc.id) ?? new Date()
-            : new Date(doc.id),
-        };
-      });
+      return snap.docs.map((doc) => ({
+        id: doc.id,
+        count: doc.data().total ?? doc.data().count,
+        createdAt: doc.data().createdAt
+          ? (doc.data().createdAt as Timestamp).toDate()
+          : viewType === "weekly"
+          ? parseWeekIdToDate(doc.id) ?? new Date()
+          : new Date(doc.id),
+      }));
     },
     staleTime: 1000 * 60,
   });
 
-  return {
-    ...queryResult,
-    totalPages: totalPagesMap[viewType],
-  };
+  return queryResult;
 };
 
 // 기록 추가
