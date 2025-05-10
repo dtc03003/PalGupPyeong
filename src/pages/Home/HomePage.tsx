@@ -8,28 +8,10 @@ import QuickAddRecord from "@components/record/QuickAddRecord";
 import * as S from "./HomePage.styles";
 
 const Home = () => {
-  const { data: dailyStats, isLoading: dailyLoading, isError: dailyError } = useGetDailyRecords();
-  const {
-    data: weeklyStats,
-    isLoading: weeklyLoading,
-    isError: weeklyError,
-  } = useGetWeeklyRecords();
-  const {
-    data: monthlyStats,
-    isLoading: monthlyLoading,
-    isError: monthlyError,
-  } = useGetMonthlyRecords();
-
-  const isLoading = dailyLoading || weeklyLoading || monthlyLoading;
-  const isError = dailyError || weeklyError || monthlyError;
-
-  if (isLoading) {
-    return <S.Message>로딩 중...</S.Message>;
-  }
-
-  if (isError) {
-    return <S.ErrorMessage>에러가 발생했습니다. 데이터를 불러오지 못했습니다.</S.ErrorMessage>;
-  }
+  const { data: dailyStats } = useGetDailyRecords();
+  const { data: weeklyStats, isLoading: weeklyLoading } = useGetWeeklyRecords();
+  const { data: monthlyStats, isLoading: monthlyLoading } =
+    useGetMonthlyRecords();
 
   return (
     <S.Container>
