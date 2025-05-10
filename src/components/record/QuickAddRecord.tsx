@@ -40,10 +40,18 @@ const QuickAddRecord = () => {
       <S.Input
         type="number"
         value={count}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCount(Number(e.target.value))}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setCount(Number(e.target.value))
+        }
         min={1}
       />
-      <S.AddButton onClick={handleAddRecord} disabled={isSubmitting || count <= 0}>빠른 기록 추가</S.AddButton>
+      <S.AddButton
+        onClick={handleAddRecord}
+        loading={isSubmitting}
+        disabled={count <= 0}
+      >
+        빠른 기록 추가
+      </S.AddButton>
     </S.QuickAddContainer>
   );
 };
