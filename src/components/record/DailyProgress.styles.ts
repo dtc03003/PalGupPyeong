@@ -20,7 +20,7 @@ export const Header = styled.div`
   justify-content: flex-end;
 `;
 
-export const ProgressText = styled.p`
+export const ProgressText = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: #333;
