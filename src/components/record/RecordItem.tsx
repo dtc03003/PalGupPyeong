@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { UseMutationResult } from "@tanstack/react-query";
 import { formatDate, formatWeekDate } from "@utils/dateUtils";
+import ConfirmToast from "@components/toast/ConfirmToast";
 import { UpdateRecordData, ViewType } from "./type";
 
 interface RecordItemProps {
@@ -27,11 +28,13 @@ const RecordItem = ({
   const handleDelete = (id: string) => {
     toast(
       ({ closeToast }) => (
-        <div>
-          <p>정말 삭제하시겠습니까?</p>
-          <button onClick={() => confirmDelete(id, closeToast)}>예</button>
-          <button onClick={closeToast}>아니오</button>
-        </div>
+        <ConfirmToast
+          message="정말 삭제하시겠습니까?"
+          onConfirm={() => confirmDelete(id, closeToast)}
+          closeToast={closeToast}
+          confirmText="예"
+          cancelText="아니오"
+        />
       ),
       { autoClose: false }
     );
