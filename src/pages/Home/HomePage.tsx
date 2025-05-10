@@ -4,6 +4,7 @@ import { useGetMonthlyRecords } from "@hooks/useGetMonthlyRecords";
 
 import DailyProgress from "@components/record/DailyProgress";
 import QuickAddRecord from "@components/record/QuickAddRecord";
+import StatsCard from "@components/record/StatsCard";
 
 import * as S from "./HomePage.styles";
 
@@ -22,15 +23,16 @@ const Home = () => {
       <DailyProgress total={dailyStats || 0} />
 
       <S.StatsWrapper>
-        <S.StatsContainer>
-          <S.StatsTitle>주간 통계</S.StatsTitle>
-          <S.StatsText>{weeklyStats ? `${weeklyStats}` : "데이터가 없습니다."}</S.StatsText>
-        </S.StatsContainer>
-
-        <S.StatsContainer>
-          <S.StatsTitle>월간 통계</S.StatsTitle>
-          <S.StatsText>{monthlyStats ? `${monthlyStats}` : "데이터가 없습니다."}</S.StatsText>
-        </S.StatsContainer>
+        <StatsCard
+          title="주간 통계"
+          data={weeklyStats}
+          isLoading={weeklyLoading}
+        />
+        <StatsCard
+          title="월간 통계"
+          data={monthlyStats}
+          isLoading={monthlyLoading}
+        />
       </S.StatsWrapper>
     </S.Container>
   );
