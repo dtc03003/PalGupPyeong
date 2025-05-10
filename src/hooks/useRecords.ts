@@ -14,19 +14,19 @@ import {
   QueryDocumentSnapshot,
   getDoc,
   orderBy,
+  DocumentData,
 } from "firebase/firestore";
-import { db } from "@api/firebase";
-import { auth } from "@api/firebase";
-import { getDayKey, getMonthKey, getWeekKey } from "@utils/dateUtils";
+import { db, auth } from "@api/firebase";
+import { updateAllAggregates } from "@utils/aggregateUtils";
+import { parseWeekIdToDate } from "@utils/weeklyUtils";
+import { Record } from "@components/record/type";
 
-interface PushupRecord {
+interface AddRecord {
   count: number;
 }
 
-interface RecordData {
-  id: string;
-  count: number;
-  createdAt: Date;
+interface PushupRecord extends AddRecord {
+  createdAt: Timestamp;
 }
 
 interface UpdateRecordData {
@@ -37,51 +37,61 @@ interface UpdateRecordData {
   };
 }
 
-// 기록 조회
-export const useRecords = (page: number, pageSize: number) => {
-  const [lastVisibleDocs, setLastVisibleDocs] = useState<QueryDocumentSnapshot[]>([]);
+type ViewType = "records" | "daily" | "weekly" | "monthly";
 
-  return useQuery<RecordData[]>({
-    queryKey: ["pushupRecords", page],
+type LastVisibleMap = {
+  [key in ViewType]?: QueryDocumentSnapshot<DocumentData>[];
+};
+
+// 기록 조회
+export const useRecords = (
+  viewType: ViewType,
+  page: number,
+  pageSize: number
+) => {
+  const [lastVisibleDocs, setLastVisibleDocs] = useState<LastVisibleMap>({});
+
+  const queryResult = useQuery<Record[], Error>({
+    queryKey: ["pushupRecords", viewType, page],
     queryFn: async () => {
       const user = auth.currentUser;
-      if (!user) throw new Error("로그인된 사용자가 없습니다.");
+      if (!user) throw new Error("로그인이 필요합니다.");
 
-      const recordsRef = collection(db, "pushupRecords", user.uid, "records");
-
-      const lastVisibleDoc = page > 1 ? lastVisibleDocs[page - 2] : null;
-
-      if (page > 1 && !lastVisibleDoc) throw new Error("이전 페이지 데이터를 로드하지 못했습니다.");
+      const recordsRef = collection(db, "pushupRecords", user.uid, viewType);
+      const lastDocs = lastVisibleDocs[viewType] ?? [];
+      const prevLastDoc = page > 1 ? lastDocs[page - 2] : null;
 
       const recordsQuery = query(
         recordsRef,
-        orderBy("createdAt", "desc"),
-        limit(pageSize),
-        ...(lastVisibleDoc ? [startAfter(lastVisibleDoc)] : [])
+        orderBy("__name__", "desc"),
+        ...(prevLastDoc ? [startAfter(prevLastDoc)] : []),
+        limit(pageSize)
       );
 
-      const querySnapshot = await getDocs(recordsQuery);
+      const snap = await getDocs(recordsQuery);
 
-      // 현재 페이지의 마지막 문서를 기록
-      if (!querySnapshot.empty) {
-        const lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisibleDocs((prev) => {
-          const updated = [...prev];
-          updated[page - 1] = lastDoc;
-          return updated;
-        });
+      if (!snap.empty) {
+        const lastDoc = snap.docs[snap.docs.length - 1];
+        setLastVisibleDocs((prev) => ({
+          ...prev,
+          [viewType]: [...(prev[viewType] ?? []), lastDoc],
+        }));
       }
 
-      return querySnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          count: data.count,
-          createdAt: (data.createdAt as Timestamp).toDate(),
-        };
-      });
+      return snap.docs.map((doc) => ({
+        id: doc.id,
+        count: doc.data().total ?? doc.data().count,
+        createdAt: doc.data().createdAt
+          ? (doc.data().createdAt as Timestamp).toDate()
+          : viewType === "weekly"
+          ? parseWeekIdToDate(doc.id) ?? new Date()
+          : new Date(doc.id),
+      }));
     },
+    staleTime: 1000 * 60,
   });
+
+  return queryResult;
 };
 
 // 기록 추가
@@ -89,46 +99,36 @@ export const useAddRecord = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newRecord: PushupRecord) => {
+    mutationFn: async (newRecord: AddRecord) => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
       const now = Timestamp.now();
-      const dayKey = getDayKey(now.toDate()); // 일간 키 (YYYY-MM-DD)
-      const weekKey = getWeekKey(now.toDate()); // 주간 키 (YYYY-WW)
-      const monthKey = getMonthKey(now.toDate()); // 월간 키 (YYYY-MM)
-
       const newRecordWithTimestamp = {
         ...newRecord,
         userId: user.uid,
         createdAt: now,
       };
 
-      // 개별 기록 저장
-      const recordRef = doc(db, "pushupRecords", user.uid, "records", now.toMillis().toString());
+      const recordRef = doc(
+        db,
+        "pushupRecords",
+        user.uid,
+        "records",
+        now.toMillis().toString()
+      );
       await setDoc(recordRef, newRecordWithTimestamp);
 
-      // 일간 합산 기록 업데이트
-      const dailyRef = doc(db, "pushupRecords", user.uid, "daily", dayKey);
-      const dailyDoc = await getDoc(dailyRef);
-      const dailyTotal = dailyDoc.exists() ? dailyDoc.data()?.total || 0 : 0;
-      await setDoc(dailyRef, { total: dailyTotal + newRecord.count }, { merge: true });
-
-      // 주간 합산 기록 업데이트
-      const weeklyRef = doc(db, "pushupRecords", user.uid, "weekly", weekKey);
-      const weeklyDoc = await getDoc(weeklyRef);
-      const weeklyTotal = weeklyDoc.exists() ? weeklyDoc.data()?.total || 0 : 0;
-      await setDoc(weeklyRef, { total: weeklyTotal + newRecord.count }, { merge: true });
-
-      // 월간 합산 기록 업데이트
-      const monthlyRef = doc(db, "pushupRecords", user.uid, "monthly", monthKey);
-      const monthlyDoc = await getDoc(monthlyRef);
-      const monthlyTotal = monthlyDoc.exists() ? monthlyDoc.data()?.total || 0 : 0;
-      await setDoc(monthlyRef, { total: monthlyTotal + newRecord.count }, { merge: true });
+      await updateAllAggregates({
+        userId: user.uid,
+        createdAt: now.toDate(),
+        diff: newRecord.count,
+      });
 
       return { id: recordRef.id, ...newRecordWithTimestamp };
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pushupRecords"] });
       queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
       queryClient.invalidateQueries({ queryKey: ["weeklyStats"] });
       queryClient.invalidateQueries({ queryKey: ["monthlyStats"] });
@@ -145,15 +145,25 @@ export const useDeleteRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      // Firestore에서 해당 기록 삭제
       const recordRef = doc(db, "pushupRecords", user.uid, "records", recordId);
+      const recordDoc = await getDoc(recordRef);
+      if (!recordDoc.exists()) throw new Error("기록이 존재하지 않습니다.");
+
+      const recordData = recordDoc.data() as PushupRecord;
+
       await deleteDoc(recordRef);
+
+      await updateAllAggregates({
+        userId: user.uid,
+        createdAt: recordData.createdAt.toDate(),
+        diff: -recordData.count,
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["pushupRecords"],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: ["pushupRecords"] });
+      queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["weeklyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["monthlyStats"] });
     },
   });
 };
@@ -168,18 +178,31 @@ export const useUpdateRecord = () => {
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
       const recordRef = doc(db, "pushupRecords", user.uid, "records", recordId);
+      const recordDoc = await getDoc(recordRef);
+      if (!recordDoc.exists()) throw new Error("기록이 존재하지 않습니다.");
+
+      const recordData = recordDoc.data() as PushupRecord;
+      const oldCount = recordData.count;
+      const newCount = updatedData.count ?? oldCount;
 
       const updatedPayload = {
         ...updatedData,
         ...(updatedData.date && { date: Timestamp.fromDate(updatedData.date) }),
       };
+
       await updateDoc(recordRef, updatedPayload);
+
+      await updateAllAggregates({
+        userId: user.uid,
+        createdAt: recordData.createdAt.toDate(),
+        diff: newCount - oldCount,
+      });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["pushupRecords"],
-        exact: true,
-      });
+      queryClient.invalidateQueries({ queryKey: ["pushupRecords"] });
+      queryClient.invalidateQueries({ queryKey: ["dailyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["weeklyStats"] });
+      queryClient.invalidateQueries({ queryKey: ["monthlyStats"] });
     },
   });
 };

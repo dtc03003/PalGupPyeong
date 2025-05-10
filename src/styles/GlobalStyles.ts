@@ -37,10 +37,15 @@ const GlobalStyle = createGlobalStyle`
     border: none;
     cursor: pointer;
   }
+
+  .Toastify__toast {
+    width: 100%;
+  }
 `;
 
 export const StyledContainer = styled(ToastContainer)`
-  width: 50%;
+  position: absolute;
+  width: 60%;
   top: 50px !important;
   right: 0 !important;
   left: auto !important;

@@ -1,4 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 
 import NavBar from "./components/layout/NavBar";
@@ -16,41 +18,45 @@ import theme from "./styles/theme";
 import * as S from "./styles/GlobalStyles";
 
 function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    toast.dismiss();
+  }, [location]);
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Layout>
-        <Router>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route
-              path="/auth/:type"
-              element={
-                <PublicRoute>
-                  <AuthPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/record"
-              element={
-                <PrivateRoute>
-                  <RecordsPage />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/my-records"
-              element={
-                <PrivateRoute>
-                  <MyRecordsPage />
-                </PrivateRoute>
-              }
-            />
-            <Route path="*" element={<ErrorPage />} />
-          </Routes>
-        </Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/auth/:type"
+            element={
+              <PublicRoute>
+                <AuthPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/record"
+            element={
+              <PrivateRoute>
+                <RecordsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-records"
+            element={
+              <PrivateRoute>
+                <MyRecordsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
         <S.StyledContainer position="top-right" closeOnClick={true} />
       </Layout>
     </ThemeProvider>

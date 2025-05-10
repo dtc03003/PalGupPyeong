@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import LoadingButton from "@components/common/LoadingButton";
 
 export const QuickAddContainer = styled.div`
   width: 100%;
@@ -22,7 +23,7 @@ export const Input = styled.input`
   text-align: center;
 `;
 
-export const AddButton = styled.button`
+export const AddButton = styled(LoadingButton)`
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -32,7 +33,12 @@ export const AddButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
 
-  &:hover {
+  &:hover:enabled {
     background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: default;
   }
 `;
