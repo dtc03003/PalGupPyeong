@@ -3,6 +3,7 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { formatDate, formatWeekDate } from "@utils/dateUtils";
 import ConfirmToast from "@components/toast/ConfirmToast";
 import { UpdateRecordData, ViewType } from "./type";
+import * as S from "./RecordItem.styles";
 
 interface RecordItemProps {
   viewType: ViewType;
@@ -77,30 +78,51 @@ const RecordItem = ({
   };
 
   return (
-    <li>
+    <S.ListItem>
       {editingId === record.id ? (
         <>
-          <input
+          <S.EditInput
             type="number"
             value={newCount}
             onChange={(e) => setNewCount(Number(e.target.value))}
           />
-          {updateRecord && <button onClick={handleUpdate}>저장</button>}
-          <button onClick={handleCancel}>취소</button>
+          <S.Actions>
+            <button className="save-btn" onClick={handleUpdate}>
+              저장
+            </button>
+            <button className="cancel-btn" onClick={handleCancel}>
+              취소
+            </button>
+          </S.Actions>
         </>
       ) : (
         <>
-          {record.count} 회 -{" "}
-          {viewType === "weekly"
-            ? formatWeekDate(record.createdAt)
-            : formatDate(record.createdAt)}
-          {updateRecord && <button onClick={handleEdit}>수정</button>}
-          {deleteRecord && (
-            <button onClick={() => handleDelete(record.id)}>삭제</button>
-          )}
+          <S.Info>
+            <span className="count">{record.count} 회</span>
+            <span className="date">
+              {viewType === "weekly"
+                ? formatWeekDate(record.createdAt)
+                : formatDate(record.createdAt)}
+            </span>
+          </S.Info>
+          <S.Actions>
+            {updateRecord && (
+              <button className="edit-btn" onClick={handleEdit}>
+                수정
+              </button>
+            )}
+            {deleteRecord && (
+              <button
+                className="delete-btn"
+                onClick={() => handleDelete(record.id)}
+              >
+                삭제
+              </button>
+            )}
+          </S.Actions>
         </>
       )}
-    </li>
+    </S.ListItem>
   );
 };
 
