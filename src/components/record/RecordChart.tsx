@@ -7,12 +7,16 @@ import {
   Line,
 } from "recharts";
 import { formatDate } from "@utils/dateUtils";
+import SkeletonChart from "./SkeletonChart";
 
 interface Props {
   records: { createdAt: Date; count: number }[];
+  isLoading?: boolean;
 }
 
-const RecordChart = ({ records }: Props) => {
+const RecordChart = ({ records, isLoading = false }: Props) => {
+  if (isLoading) return <SkeletonChart />;
+
   return (
     <ResponsiveContainer width="100%" height={260}>
       <LineChart
