@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import ConfirmToast from "@components/toast/ConfirmToast";
+import { SkeletonBox } from "@components/common/SkeletonBox";
 import { useSetDailyGoal, useGetDailyGoal } from "@hooks/useDailyGoal";
 import { getMotivationalMessage } from "@utils/getMotivationalMessage";
 import * as S from "./DailyProgress.styles";
@@ -12,15 +13,13 @@ interface DailyProgressProps {
 }
 
 const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
-  const { data: goal = 0, isLoading } = useGetDailyGoal();
+  const { data: goal, isLoading } = useGetDailyGoal();
   const setDailyGoal = useSetDailyGoal();
   const newGoalRef = useRef<number>(goal);
 
   useEffect(() => {
     newGoalRef.current = goal;
   }, [goal]);
-
-  if (isLoading) return <S.Message>목표를 불러오는 중...</S.Message>;
 
   const progress = goal > 0 ? Math.min((total / goal) * 100, 100) : 0;
 
@@ -68,20 +67,31 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
       <S.Header>
         <S.SettingBtn onClick={handleSetGoal} />
       </S.Header>
-
-      <S.ProgressText>
-        <span>오늘의 진행률</span>
-        <strong>
-          {total} / {goal} 회
-        </strong>
-      </S.ProgressText>
-
-      <S.ProgressBar>
-        <S.ProgressFill $progress={progress} />
-      </S.ProgressBar>
-
-      <S.Percentage>{progress.toFixed(1)}%</S.Percentage>
-      <S.Message>{message}</S.Message>
+      {isLoading || goal === undefined ? (
+        <>
+          <S.ProgressText>
+            <span>오늘의 진행률</span>
+            <SkeletonBox $width="60%" $height="27px" />
+          </S.ProgressText>
+          <SkeletonBox $width="100%" $height="12px" />
+          <SkeletonBox $width="20%" $height="24px" />
+          <SkeletonBox $width="100%" $height="21px" $margin="8px 0 0 0" />
+        </>
+      ) : (
+        <>
+          <S.ProgressText>
+            <span>오늘의 진행률</span>
+            <strong>
+              {total} / {goal} 회
+            </strong>
+          </S.ProgressText>
+          <S.ProgressBar>
+            <S.ProgressFill $progress={progress} />
+          </S.ProgressBar>
+          <S.Percentage>{progress.toFixed(1)}%</S.Percentage>
+          <S.Message>{message}</S.Message>
+        </>
+      )}
     </S.Container>
   );
 };

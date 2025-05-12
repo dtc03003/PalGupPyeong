@@ -14,16 +14,19 @@ const RecordListPage = () => {
   const [viewType, setViewType] = useState<ViewType>("daily");
   const pageSize = 10;
 
-  const { data: records, isLoading } = useRecords(viewType, page, pageSize);
+  const { data: records, isLoading: isRecordsLoading } = useRecords(
+    viewType,
+    page,
+    pageSize
+  );
   const { totalPages, isLoading: isTotalPagesLoading } = useTotalPages(
     viewType,
     pageSize
   );
+  const isLoading = isRecordsLoading || isTotalPagesLoading;
 
   const deleteRecord = useDeleteRecord();
   const updateRecord = useUpdateRecord();
-
-  if (isLoading || isTotalPagesLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -40,10 +43,11 @@ const RecordListPage = () => {
         <option value="monthly">월간</option>
       </select>
 
-      <RecordChart records={records ?? []} />
+      <RecordChart records={records ?? []} isLoading={isLoading} />
       <RecordList
         viewType={viewType}
-        records={records ?? []}
+        records={records}
+        isLoading={isLoading}
         page={page}
         setPage={setPage}
         totalPages={totalPages ?? 0}
