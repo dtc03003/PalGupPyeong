@@ -12,14 +12,22 @@ export const getDayKey = (date: Date) => {
   return date.toISOString().split("T")[0];
 };
 
-export const getWeekKey = (date: Date) => {
+export function getWeekKey(date: Date): string {
   const d = new Date(date);
   const year = d.getFullYear();
-  const week = Math.floor(
-    (d.getTime() - new Date(year, 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000)
+  const firstDayOfYear = new Date(year, 0, 1);
+
+  const dayOfWeek = firstDayOfYear.getDay();
+  const mondayOffset = dayOfWeek <= 4 ? 1 - dayOfWeek : 8 - dayOfWeek;
+  const firstMonday = new Date(
+    firstDayOfYear.setDate(firstDayOfYear.getDate() + mondayOffset)
   );
-  return `${year}-W${week}`;
-};
+
+  const diffTime = d.getTime() - firstMonday.getTime();
+  const weekNumber = Math.floor(diffTime / (7 * 24 * 60 * 60 * 1000)) + 1;
+
+  return `${year}-W${weekNumber}`;
+}
 
 export const getMonthKey = (date: Date) => {
   const d = new Date(date);
@@ -30,10 +38,16 @@ export function formatWeekDate(date: Date): string {
   const month = date.getMonth() + 1;
   const day = date.getDate();
 
-  const weekOrder = Math.floor((day - 1) / 7) + 1;
+  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  const dayOfWeek = firstDayOfMonth.getDay();
+  const offset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 
-  const weekText =
-    ["첫째", "둘째", "셋째", "넷째", "다섯째"][weekOrder - 1] ?? "";
+  const adjustedDate = day + offset;
+  const weekOrder = Math.ceil(adjustedDate / 7);
+
+  const weekText = ["첫째", "둘째", "셋째", "넷째", "다섯째"][
+    Math.min(weekOrder - 1, 4)
+  ];
 
   return `${month}월 ${weekText} 주`;
 }

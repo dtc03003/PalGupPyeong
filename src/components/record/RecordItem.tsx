@@ -67,6 +67,7 @@ const RecordItem = ({
         updatedData: { count: newCount },
       });
       setEditingId(null);
+      setNewCount(0);
     } catch (error) {
       console.error("수정 실패:", error);
     }

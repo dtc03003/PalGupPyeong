@@ -8,11 +8,19 @@ import { useTotalPages } from "@hooks/useTotalPages";
 import RecordChart from "@components/record/RecordChart";
 import RecordList from "@components/record/RecordList";
 import { ViewType } from "@components/record/type";
+import TabSelector, { TabOption } from "@components/common/TabSelector";
 
 const RecordListPage = () => {
   const [page, setPage] = useState(1);
   const [viewType, setViewType] = useState<ViewType>("daily");
   const pageSize = 10;
+
+  const viewTypes: TabOption[] = [
+    { label: "일일", value: "daily" },
+    { label: "주간", value: "weekly" },
+    { label: "월간", value: "monthly" },
+    { label: "기록들", value: "records" },
+  ];
 
   const { data: records, isLoading: isRecordsLoading } = useRecords(
     viewType,
@@ -30,20 +38,17 @@ const RecordListPage = () => {
 
   return (
     <>
-      <select
-        value={viewType}
-        onChange={(e) => {
-          setPage(1);
-          setViewType(e.target.value as ViewType);
-        }}
-      >
-        <option value="records">기록들</option>
-        <option value="daily">일일</option>
-        <option value="weekly">주간</option>
-        <option value="monthly">월간</option>
-      </select>
-
       <RecordChart records={records ?? []} isLoading={isLoading} />
+
+      <TabSelector
+        options={viewTypes}
+        activeValue={viewType}
+        onChange={(value: ViewType) => {
+          setPage(1);
+          setViewType(value);
+        }}
+      />
+
       <RecordList
         viewType={viewType}
         records={records}
