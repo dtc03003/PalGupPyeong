@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const RecordListWrapper = styled.ul`
-  max-height: 300px;
-  height: auto;
+  height: 300px;
   overflow-y: auto;
   list-style-type: none;
   padding: 0;
