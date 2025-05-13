@@ -1,64 +1,21 @@
 import { useState } from "react";
-import {
-  useRecords,
-  useDeleteRecord,
-  useUpdateRecord,
-} from "@hooks/useRecords";
-import { useTotalPages } from "@hooks/useTotalPages";
-import RecordChart from "@components/record/RecordChart";
-import RecordList from "@components/record/RecordList";
-import { ViewType } from "@components/record/type";
-import TabSelector, { TabOption } from "@components/common/TabSelector";
+import RecordView from "./RecordView";
+import CalendarView from "./CalendarView";
+
+type TabOption = "record" | "calendar";
 
 const RecordListPage = () => {
-  const [page, setPage] = useState(1);
-  const [viewType, setViewType] = useState<ViewType>("daily");
-  const pageSize = 10;
-
-  const viewTypes: TabOption[] = [
-    { label: "일일", value: "daily" },
-    { label: "주간", value: "weekly" },
-    { label: "월간", value: "monthly" },
-    { label: "기록들", value: "records" },
-  ];
-
-  const { data: records, isLoading: isRecordsLoading } = useRecords(
-    viewType,
-    page,
-    pageSize
-  );
-  const { totalPages, isLoading: isTotalPagesLoading } = useTotalPages(
-    viewType,
-    pageSize
-  );
-  const isLoading = isRecordsLoading || isTotalPagesLoading;
-
-  const deleteRecord = useDeleteRecord();
-  const updateRecord = useUpdateRecord();
+  const [tab, setTab] = useState<TabOption>("record");
 
   return (
     <>
-      <RecordChart records={records ?? []} isLoading={isLoading} />
+      <>
+        <button onClick={() => setTab("record")}>기록 보기</button>
+        <button onClick={() => setTab("calendar")}>캘린더 보기</button>
+      </>
 
-      <TabSelector
-        options={viewTypes}
-        activeValue={viewType}
-        onChange={(value: ViewType) => {
-          setPage(1);
-          setViewType(value);
-        }}
-      />
-
-      <RecordList
-        viewType={viewType}
-        records={records}
-        isLoading={isLoading}
-        page={page}
-        setPage={setPage}
-        totalPages={totalPages ?? 0}
-        deleteRecord={viewType === "records" ? deleteRecord : undefined}
-        updateRecord={viewType === "records" ? updateRecord : undefined}
-      />
+      {tab === "record" && <RecordView />}
+      {tab === "calendar" && <CalendarView />}
     </>
   );
 };
