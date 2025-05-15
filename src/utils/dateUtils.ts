@@ -9,7 +9,10 @@ export const formatDate = (timestamp: { seconds: number } | Date) => {
 };
 
 export const getDayKey = (date: Date) => {
-  return date.toISOString().split("T")[0];
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`; // "2025-05-15"
 };
 
 export function getWeekKey(date: Date): string {
