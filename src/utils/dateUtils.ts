@@ -1,56 +1,57 @@
-export const formatDate = (timestamp: { seconds: number } | Date) => {
-  const date =
-    timestamp instanceof Date ? timestamp : new Date(timestamp.seconds * 1000);
-  return date.toLocaleDateString("ko-KR", {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit",
-  });
-};
+import { addWeeks, format, getDate, getMonth, startOfISOWeek } from "date-fns";
+import { ko } from "date-fns/locale";
+import { getISOWeek } from "date-fns";
 
-export const getDayKey = (date: Date) => {
+// 일간 ID (예: "2025-05-15")
+export const getDayId = (date: Date) => format(date, "yyyy-MM-dd");
+
+// 주간 ID (예: "2025-W20")
+export const getWeekId = (date: Date) => {
   const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  const day = `${date.getDate()}`.padStart(2, "0");
-  return `${year}-${month}-${day}`; // "2025-05-15"
+  const week = getISOWeek(date);
+  return `${year}-W${week.toString().padStart(2, "0")}`;
 };
 
-export function getWeekKey(date: Date): string {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const firstDayOfYear = new Date(year, 0, 1);
+// 월간 ID (예: "2025-05")
+export const getMonthId = (date: Date) => format(date, "yyyy-MM");
 
-  const dayOfWeek = firstDayOfYear.getDay();
-  const mondayOffset = dayOfWeek <= 4 ? 1 - dayOfWeek : 8 - dayOfWeek;
-  const firstMonday = new Date(
-    firstDayOfYear.setDate(firstDayOfYear.getDate() + mondayOffset)
-  );
-
-  const diffTime = d.getTime() - firstMonday.getTime();
-  const weekNumber = Math.floor(diffTime / (7 * 24 * 60 * 60 * 1000)) + 1;
-
-  return `${year}-W${weekNumber}`;
-}
-
-export const getMonthKey = (date: Date) => {
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+// 사용자용 날짜 포맷 (예: "25.05.15")
+export const formatDateDisplay = (date: Date | { seconds: number }): string => {
+  const d = date instanceof Date ? date : new Date(date.seconds * 1000);
+  return format(d, "yy.MM.dd", { locale: ko });
 };
 
-export function formatWeekDate(date: Date): string {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+// 주차 ID 문자열 (예: "2025-W20") → Date (그 주의 월요일)
+export const parseWeekIdToDate = (weekId: string): Date | null => {
+  const [yearStr, weekStr] = weekId.split("-W");
+  const year = parseInt(yearStr, 10);
+  const week = parseInt(weekStr, 10);
+  if (isNaN(year) || isNaN(week)) return null;
+
+  const jan4 = new Date(year, 0, 4);
+  const firstWeekMonday = startOfISOWeek(jan4);
+  return addWeeks(firstWeekMonday, week - 1);
+};
+
+// 몇째 주 포맷 (예: "5월 둘째 주")
+export const formatWeekDisplay = (date: Date): string => {
+  const month = getMonth(date) + 1;
+  const day = getDate(date);
 
   const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-  const dayOfWeek = firstDayOfMonth.getDay();
-  const offset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const firstDayWeekday = firstDayOfMonth.getDay();
+  const offset = firstDayWeekday === 0 ? 6 : firstDayWeekday - 1;
 
-  const adjustedDate = day + offset;
-  const weekOrder = Math.ceil(adjustedDate / 7);
-
+  const adjusted = day + offset;
+  const weekOrder = Math.ceil(adjusted / 7);
   const weekText = ["첫째", "둘째", "셋째", "넷째", "다섯째"][
     Math.min(weekOrder - 1, 4)
   ];
 
   return `${month}월 ${weekText} 주`;
-}
+};
+
+// 날짜 -> 몇시: 몇분
+export const formatTime = (date: Date): string => {
+  return format(date, "HH:mm");
+};

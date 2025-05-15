@@ -1,7 +1,6 @@
 import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
-import { format } from "date-fns";
 import { db } from "@api/firebase";
-import { getDayKey, getMonthKey, getWeekKey } from "./dateUtils";
+import { getDayId, getWeekId, getMonthId, formatTime } from "./dateUtils";
 
 const updateAggregate = async ({
   userId,
@@ -25,7 +24,7 @@ const updateAggregate = async ({
   };
 
   if (type === "daily") {
-    const time = format(createdAt, "HH:mm");
+    const time = formatTime(createdAt);
     baseData.timeline = arrayUnion({ time, count: diff });
   }
 
@@ -41,9 +40,9 @@ export const updateAllAggregates = async ({
   createdAt: Date;
   diff: number;
 }) => {
-  const dayKey = getDayKey(createdAt);
-  const weekKey = getWeekKey(createdAt);
-  const monthKey = getMonthKey(createdAt);
+  const dayKey = getDayId(createdAt);
+  const weekKey = getWeekId(createdAt);
+  const monthKey = getMonthId(createdAt);
 
   await Promise.all([
     updateAggregate({

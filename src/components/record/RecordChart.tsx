@@ -6,7 +6,7 @@ import {
   ResponsiveContainer,
   Line,
 } from "recharts";
-import { formatDate } from "@utils/dateUtils";
+import { formatDateDisplay } from "@utils/dateUtils";
 import SkeletonChart from "./SkeletonChart";
 
 interface Props {
@@ -23,10 +23,10 @@ const RecordChart = ({ records, isLoading = false }: Props) => {
         data={[...records].reverse()}
         margin={{ top: 30, right: 30, left: 0, bottom: 5 }}
       >
-        <XAxis dataKey="createdAt" tickFormatter={formatDate} />
+        <XAxis dataKey="createdAt" tickFormatter={formatDateDisplay} />
         <YAxis width={30} />
         <Tooltip
-          labelFormatter={(label) => formatDate(label)}
+          labelFormatter={(label) => formatDateDisplay(label)}
           formatter={(value) => [value, "갯수"]}
         />
         <Line

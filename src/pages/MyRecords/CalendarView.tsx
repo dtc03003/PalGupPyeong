@@ -3,7 +3,7 @@ import "react-calendar/dist/Calendar.css";
 import { useMonthlyRecords } from "@hooks/useMonthlyRecords";
 import { useDailyTimeline } from "@hooks/useDailyTimeline";
 import { auth } from "@api/firebase";
-import { formatDate } from "@utils/dateUtils";
+import { formatDateDisplay } from "@utils/dateUtils";
 import * as S from "./CalendarView.styles";
 
 type TimelineEntry = {
@@ -32,8 +32,8 @@ const CalendarView = () => {
 
   const renderTileContent = ({ date, view }: { date: Date; view: string }) => {
     if (view !== "month") return null;
-    const key = formatDate(date);
-    const record = records.find((r) => formatDate(r.createdAt) === key);
+    const key = formatDateDisplay(date);
+    const record = records.find((r) => formatDateDisplay(r.createdAt) === key);
     return record ? <S.TileTotal>{record.total}회</S.TileTotal> : null;
   };
 
@@ -53,18 +53,29 @@ const CalendarView = () => {
             year: activeStartDate.getFullYear(),
             month: activeStartDate.getMonth() + 1,
           });
+          setSelectedDate(
+            new Date(
+              activeStartDate.getFullYear(),
+              activeStartDate.getMonth(),
+              1
+            )
+          );
         }}
         tileClassName={({ date, view }) => {
           if (view !== "month") return undefined;
-          const key = formatDate(date);
-          const hasData = records.some((r) => formatDate(r.createdAt) === key);
+          const key = formatDateDisplay(date);
+          const hasData = records.some(
+            (r) => formatDateDisplay(r.createdAt) === key
+          );
           return hasData ? "has-data" : undefined;
         }}
       />
 
       {selectedDate && (
         <S.TimelineContainer>
-          <S.TimelineTitle>{formatDate(selectedDate)} 기록</S.TimelineTitle>
+          <S.TimelineTitle>
+            {formatDateDisplay(selectedDate)} 기록
+          </S.TimelineTitle>
           {timeline.length === 0 ? (
             <p>기록 없음</p>
           ) : (

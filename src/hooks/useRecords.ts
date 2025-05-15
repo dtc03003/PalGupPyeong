@@ -18,7 +18,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "@api/firebase";
 import { updateAllAggregates } from "@utils/aggregateUtils";
-import { parseWeekIdToDate } from "@utils/weeklyUtils";
+import { parseWeekIdToDate } from "@utils/dateUtils";
 import { Record } from "@components/record/type";
 
 interface AddRecord {
