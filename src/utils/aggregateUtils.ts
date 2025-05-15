@@ -1,4 +1,5 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
+import { format } from "date-fns";
 import { db } from "@api/firebase";
 import { getDayKey, getMonthKey, getWeekKey } from "./dateUtils";
 
@@ -7,16 +8,28 @@ const updateAggregate = async ({
   type,
   key,
   diff,
+  createdAt,
 }: {
   userId: string;
   type: "daily" | "weekly" | "monthly";
   key: string;
   diff: number;
+  createdAt: Date;
 }) => {
   const ref = doc(db, "pushupRecords", userId, type, key);
   const docSnap = await getDoc(ref);
-  const total = docSnap.exists() ? docSnap.data()?.total || 0 : 0;
-  await setDoc(ref, { total: Math.max(total + diff, 0) }, { merge: true });
+  const prevTotal = docSnap.exists() ? docSnap.data()?.total || 0 : 0;
+
+  const baseData: any = {
+    total: Math.max(prevTotal + diff, 0),
+  };
+
+  if (type === "daily") {
+    const time = format(createdAt, "HH:mm");
+    baseData.timeline = arrayUnion({ time, count: diff });
+  }
+
+  await setDoc(ref, baseData, { merge: true });
 };
 
 export const updateAllAggregates = async ({
@@ -33,8 +46,26 @@ export const updateAllAggregates = async ({
   const monthKey = getMonthKey(createdAt);
 
   await Promise.all([
-    updateAggregate({ userId, type: "daily", key: dayKey, diff }),
-    updateAggregate({ userId, type: "weekly", key: weekKey, diff }),
-    updateAggregate({ userId, type: "monthly", key: monthKey, diff }),
+    updateAggregate({
+      userId,
+      type: "daily",
+      key: dayKey,
+      diff,
+      createdAt,
+    }),
+    updateAggregate({
+      userId,
+      type: "weekly",
+      key: weekKey,
+      diff,
+      createdAt,
+    }),
+    updateAggregate({
+      userId,
+      type: "monthly",
+      key: monthKey,
+      diff,
+      createdAt,
+    }),
   ]);
 };
