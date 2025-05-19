@@ -18,7 +18,7 @@ const TabSelector = ({ options, activeValue, onChange }: TabSelectorProps) => {
       {options.map(({ label, value }) => (
         <S.TabButton
           key={value}
-          active={value === activeValue}
+          $active={value === activeValue}
           onClick={() => onChange(value)}
         >
           {label}

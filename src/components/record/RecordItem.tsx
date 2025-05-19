@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { UseMutationResult } from "@tanstack/react-query";
-import { formatDate, formatWeekDate } from "@utils/dateUtils";
+import { formatDateDisplay, formatWeekDisplay } from "@utils/dateUtils";
 import ConfirmToast from "@components/toast/ConfirmToast";
 import { UpdateRecordData, ViewType } from "./type";
 import * as S from "./RecordItem.styles";
@@ -102,8 +102,8 @@ const RecordItem = ({
             <span className="count">{record.count} 회</span>
             <span className="date">
               {viewType === "weekly"
-                ? formatWeekDate(record.createdAt)
-                : formatDate(record.createdAt)}
+                ? formatWeekDisplay(record.createdAt)
+                : formatDateDisplay(record.createdAt)}
             </span>
           </S.Info>
           <S.Actions>
