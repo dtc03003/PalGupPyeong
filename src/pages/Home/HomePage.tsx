@@ -1,18 +1,21 @@
 import { useGetDailyRecords } from "@hooks/useGetDailyRecords";
-import { useGetWeeklyRecords } from "@hooks/useGetWeeklyRecords";
-import { useGetMonthlyRecords } from "@hooks/useGetMonthlyRecords";
+import { useGetWeeklyByDay } from "@hooks/useGetWeeklyByDay";
+import { useGetMonthlyByMonth } from "@hooks/useGetMonthlyByMonth";
 
 import DailyProgress from "@components/record/DailyProgress";
 import QuickAddRecord from "@components/record/QuickAddRecord";
 import StatsCard from "@components/record/StatsCard";
+import ScrollableWrapper from "@components/common/ScrollableWrapper";
 
+import WeeklyBarChart from "./WeeklyBarChart";
+import MonthlyBarChart from "./MonthlyBarChart";
 import * as S from "./HomePage.styles";
 
 const Home = () => {
   const { data: dailyStats } = useGetDailyRecords();
-  const { data: weeklyStats, isLoading: weeklyLoading } = useGetWeeklyRecords();
+  const { data: weeklyStats, isLoading: weeklyLoading } = useGetWeeklyByDay();
   const { data: monthlyStats, isLoading: monthlyLoading } =
-    useGetMonthlyRecords();
+    useGetMonthlyByMonth();
 
   return (
     <S.Container>
@@ -23,16 +26,16 @@ const Home = () => {
       <DailyProgress total={dailyStats || 0} />
 
       <S.StatsWrapper>
-        <StatsCard
-          title="주간 통계"
-          data={weeklyStats}
-          isLoading={weeklyLoading}
-        />
-        <StatsCard
-          title="월간 통계"
-          data={monthlyStats}
-          isLoading={monthlyLoading}
-        />
+        <StatsCard title="주간 통계" isLoading={weeklyLoading}>
+          {weeklyStats && <WeeklyBarChart data={weeklyStats} />}
+        </StatsCard>
+        <StatsCard title="월간 통계" isLoading={monthlyLoading}>
+          {monthlyStats && (
+            <ScrollableWrapper>
+              <MonthlyBarChart data={monthlyStats} />
+            </ScrollableWrapper>
+          )}
+        </StatsCard>
       </S.StatsWrapper>
     </S.Container>
   );
