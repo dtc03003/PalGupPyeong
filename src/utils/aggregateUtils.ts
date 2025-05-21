@@ -2,6 +2,8 @@ import { doc, getDoc, setDoc, arrayUnion } from "firebase/firestore";
 import { db } from "@api/firebase";
 import { getDayId, getWeekId, getMonthId, formatTime } from "./dateUtils";
 
+const weekdayKeys = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
 const updateAggregate = async ({
   userId,
   type,
@@ -17,7 +19,8 @@ const updateAggregate = async ({
 }) => {
   const ref = doc(db, "pushupRecords", userId, type, key);
   const docSnap = await getDoc(ref);
-  const prevTotal = docSnap.exists() ? docSnap.data()?.total || 0 : 0;
+  const prevData = docSnap.exists() ? docSnap.data() : {};
+  const prevTotal = prevData?.total || 0;
 
   const baseData: any = {
     total: Math.max(prevTotal + diff, 0),
@@ -26,6 +29,17 @@ const updateAggregate = async ({
   if (type === "daily") {
     const time = formatTime(createdAt);
     baseData.timeline = arrayUnion({ time, count: diff });
+  }
+
+  if (type === "weekly") {
+    const dayKey = weekdayKeys[createdAt.getDay()];
+    const prevMap = prevData?.weeklyByDay || {};
+    const prevCount = prevMap[dayKey] || 0;
+
+    baseData.weeklyByDay = {
+      ...prevMap,
+      [dayKey]: Math.max(prevCount + diff, 0),
+    };
   }
 
   await setDoc(ref, baseData, { merge: true });
