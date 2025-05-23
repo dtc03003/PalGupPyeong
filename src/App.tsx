@@ -14,18 +14,20 @@ import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 
 import GlobalStyle from "./styles/GlobalStyles";
-import theme from "./styles/theme";
+import { darkTheme, lightTheme } from "./styles/theme";
+import { useThemeStore } from "store/themeStore";
 import * as S from "./styles/GlobalStyles";
 
 function App() {
   const location = useLocation();
+  const theme = useThemeStore((state) => state.theme);
 
   useEffect(() => {
     toast.dismiss();
   }, [location]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       <GlobalStyle />
       <Layout>
         <NavBar />
