@@ -1,30 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { ThemeProvider } from "styled-components";
-
-import NavBar from "./components/layout/NavBar";
-import Layout from "./components/layout/Layout";
-import HomePage from "./pages/Home/HomePage";
-import AuthPage from "./pages/Auth/AuthPage";
-import RecordsPage from "./pages/Record/RecordPage";
-import MyRecordsPage from "./pages/MyRecords/MyRecordsPage";
-import ErrorPage from "./pages/Error/ErrorPage";
-import PrivateRoute from "./components/PrivateRoute";
-import PublicRoute from "./components/PublicRoute";
-
-import GlobalStyle from "./styles/GlobalStyles";
-import { darkTheme, lightTheme } from "./styles/theme";
 import { useThemeStore } from "store/themeStore";
-import * as S from "./styles/GlobalStyles";
+
+import NavBar from "@components/layout/NavBar";
+import Layout from "@components/layout/Layout";
+import PrivateRoute from "@components/PrivateRoute";
+import PublicRoute from "@components/PublicRoute";
+
+import HomePage from "@pages/Home/HomePage";
+import AuthPage from "@pages/Auth/AuthPage";
+import RecordsPage from "@pages/Record/RecordPage";
+import MyRecordsPage from "@pages/MyRecords/MyRecordsPage";
+import ErrorPage from "@pages/Error/ErrorPage";
+
+import GlobalStyle from "@styles/GlobalStyles";
+import { darkTheme, lightTheme } from "@styles/theme";
 
 function App() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const theme = useThemeStore((state) => state.theme);
 
   useEffect(() => {
     toast.dismiss();
-  }, [location]);
+  }, [location, theme]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        toast.dismiss();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
@@ -59,7 +74,13 @@ function App() {
           />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
-        <S.StyledContainer position="top-right" closeOnClick={true} />
+        <div ref={containerRef}>
+          <ToastContainer
+            className="custom-toast-container"
+            position="top-right"
+            theme={theme === "dark" ? "dark" : "light"}
+          />
+        </div>
       </Layout>
     </ThemeProvider>
   );
