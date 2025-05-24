@@ -8,7 +8,7 @@ const Container = styled.div`
   margin: 0 auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   min-height: 100vh;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.bg0};
   overflow: hidden;
 `;
 
