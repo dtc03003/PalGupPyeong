@@ -8,10 +8,10 @@ export const Container = styled.div`
   align-items: center;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 16px;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-  background: #fff;
+  background: ${({ theme }) => theme.bg1};
   position: relative;
 `;
 export const Header = styled.div`
@@ -23,7 +23,7 @@ export const Header = styled.div`
 export const ProgressText = styled.div`
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: ${({ theme }) => theme.text};
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -33,12 +33,12 @@ export const ProgressText = styled.div`
   span {
     font-size: 18px;
     font-weight: bold;
-    color: #333;
+    color: ${({ theme }) => theme.text};
   }
 
   strong {
     font-size: 18px;
-    color: #000;
+    color: ${({ theme }) => theme.strongText};
   }
 `;
 
@@ -49,12 +49,13 @@ export const SettingBtn = styled(Setting)`
   top: 8px;
   right: 8px;
   cursor: pointer;
+  filter: ${({ theme }) => (theme.mode === "dark" ? "invert(1)" : "none")};
 `;
 
 export const ProgressBar = styled.div`
   width: 100%;
   height: 12px;
-  background: #f0f0f0;
+  background: ${({ theme }) => theme.bg3};
   border-radius: 6px;
   overflow: hidden;
   position: relative;
@@ -77,12 +78,12 @@ export const ProgressFill = styled.div<{ $progress: number }>`
 export const Percentage = styled.p`
   font-size: 16px;
   font-weight: bold;
-  color: #555;
+  color: ${({ theme }) => theme.grayText0};
 `;
 
 export const Message = styled.p`
   font-size: 14px;
-  color: #666;
+  color: ${({ theme }) => theme.grayText1};
   text-align: center;
   margin-top: 8px;
 `;
@@ -90,21 +91,6 @@ export const Message = styled.p`
 export const GoalInput = styled.input`
   padding: 5px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 5px;
-`;
-
-export const GoalButton = styled.button`
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0056b3;
-  }
 `;
