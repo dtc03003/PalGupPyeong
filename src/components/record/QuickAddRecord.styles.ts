@@ -8,37 +8,39 @@ export const QuickAddContainer = styled.div`
   align-items: center;
   gap: 12px;
   padding: 16px;
-  border: 1px solid #ddd;
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 16px;
   box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
-  background: #fff;
+  background: ${({ theme }) => theme.bg1};
 `;
 
 export const Input = styled.input`
   width: 100%;
   padding: 8px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
   text-align: center;
+  background: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text};
 `;
 
 export const AddButton = styled(LoadingButton)`
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  background-color: #007bff;
+  background-color: ${({ theme }) => theme.primary};
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
 
   &:hover:enabled {
-    background-color: #0056b3;
+    background-color: ${({ theme }) => theme.primaryHover};
   }
 
   &:disabled {
-    background-color: #ccc;
+    background-color: ${({ theme }) => theme.disabled};
     cursor: default;
   }
 `;
