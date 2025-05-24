@@ -12,8 +12,9 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
     font-size: 10px;
     line-height: 1.5;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: ${({ theme }) => theme.outside};
+    color: ${({ theme }) => theme.text};
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   a {
