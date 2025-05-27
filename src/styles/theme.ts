@@ -21,9 +21,27 @@ export const lightTheme = {
   primaryText: "#FFFFFF",
   primaryHover: "#0056b3",
 
+  // 리스트
+  listItemEven: "#FFF",
+  listItemOdd: "#f8f9fa",
+  itemBgActive: "#228be6",
+  itemTextActive: "#ffffff",
+  itemBgHover: "#e9ecef",
+  itemBgActiveHover: "#1c7ed6",
+
+  // 캘린더
+  calendarnow: "#e3f2fd",
+
+  // 스켈레톤
+  skeletonBase: "#e0e0e0",
+  skeletonHighlight: "#f0f0f0",
+
   // 기타
   border: "#DADADA",
+  hover: "#1c7ed6",
   disabled: "#ccc",
+  scrollbarThumb: "#ccc",
+  scrollbarThumbHover: "#bbb",
 };
 
 export const darkTheme = {
@@ -49,9 +67,27 @@ export const darkTheme = {
   primaryText: "#FFFFFF",
   primaryHover: "#0056b3",
 
+  // 리스트
+  listItemEven: "#2b2b2b",
+  listItemOdd: "#343a40",
+  itemBgActive: "#1c7ed6",
+  itemTextActive: "#ffffff",
+  itemBgHover: "#3a3a3a",
+  itemBgActiveHover: "#1864ab",
+
+  // 캘린더
+  calendarnow: "#2a3b4c ",
+
+  // 스켈레톤
+  skeletonBase: "#2b2b2b",
+  skeletonHighlight: "#444444",
+
   // 기타
   border: "#333333",
+  hover: "#1864ab",
   disabled: "#555555",
+  scrollbarThumb: "#444",
+  scrollbarThumbHover: "#555",
 };
 
 // 타입 추출
