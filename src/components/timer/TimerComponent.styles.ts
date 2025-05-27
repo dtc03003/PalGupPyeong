@@ -11,7 +11,7 @@ export const Container = styled.div`
   align-items: center;
   width: 100%;
   padding-bottom: 20px;
-  background: #ffffff;
+  background: ${(props) => props.theme.bg0};
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
@@ -44,10 +44,10 @@ export const CircleText = styled.span`
   width: 95%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: #fff;
+  background: ${(props) => props.theme.bg1};
   font-size: 24px;
   font-weight: bold;
-  color: #333;
+  color: ${(props) => props.theme.text};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,7 +66,7 @@ export const CircleProgress = styled.div<CircleProgressProps>`
 export const CounterText = styled.p`
   font-size: 18px;
   font-weight: bold;
-  color: #666;
+  color: ${(props) => props.theme.subText};
   margin-top: 15px;
 `;
 
