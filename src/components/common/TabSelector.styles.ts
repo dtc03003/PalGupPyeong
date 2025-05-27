@@ -5,18 +5,21 @@ export const TabWrapper = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin: 10px 0;
+  padding: 10px 0;
+  background-color: ${({ theme }) => theme.bg1};
 `;
 
 export const TabButton = styled.button<{ $active: boolean }>`
   padding: 5px 10px;
-  background-color: ${({ $active }) => ($active ? "#ddd" : "#f9f9f9")};
-  border: 1px solid #ccc;
+  background-color: ${({ theme, $active }) =>
+    $active ? theme.bg3 : theme.bg1};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 3.75px;
+  color: ${({ theme }) => theme.text};
   font-weight: ${({ $active }) => ($active ? "bold" : "normal")};
   cursor: pointer;
 
   &:hover {
-    background-color: #eee;
+    background-color: ${({ theme }) => theme.bg2};
   }
 `;
