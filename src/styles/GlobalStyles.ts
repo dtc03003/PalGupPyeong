@@ -55,6 +55,26 @@ const GlobalStyle = createGlobalStyle`
   .Toastify__toast-theme--dark {
     background-color: ${({ theme }) => theme.bg1};
   }
+
+  ::-webkit-scrollbar { 
+    width: 16px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.bg3};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.scrollbarThumb};
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.scrollbarThumbHover}; 
+  }
 `;
 
 export default GlobalStyle;
