@@ -2,15 +2,15 @@ import styled from "styled-components";
 
 export const ListItem = styled.li`
   padding: 10px 16px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid ${(props) => props.theme.border};
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-  background-color: #ffffff;
+  background-color: ${(props) => props.theme.listItemEven};
 
   &:nth-child(odd) {
-    background-color: #f8f9fa;
+    background-color: ${(props) => props.theme.listItemOdd};
   }
 `;
 
@@ -22,12 +22,12 @@ export const Info = styled.div`
   .count {
     font-weight: 600;
     font-size: 16px;
-    color: #333;
+    color: ${(props) => props.theme.text};
   }
 
   .date {
     font-size: 14px;
-    color: #777;
+    color: ${(props) => props.theme.subText};
   }
 `;
 
