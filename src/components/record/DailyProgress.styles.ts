@@ -90,7 +90,9 @@ export const Message = styled.p`
 
 export const GoalInput = styled.input`
   padding: 5px;
-  font-size: 16px;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 5px;
+  background: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text};
+  font-size: 16px;
 `;
