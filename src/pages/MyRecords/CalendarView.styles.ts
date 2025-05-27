@@ -5,7 +5,7 @@ export const Container = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 16px;
-  background: #ffffff;
+  background: ${(props) => props.theme.bg1};
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
 `;
@@ -26,7 +26,7 @@ export const StyledCalendar = styled(Calendar)`
     button {
       background: none;
       border: none;
-      color: #444;
+      color: ${(props) => props.theme.text};
       font-size: 17.6px;
       font-weight: 600;
       cursor: pointer;
@@ -34,7 +34,8 @@ export const StyledCalendar = styled(Calendar)`
       transition: color 0.2s ease;
 
       &:hover {
-        color: #1c7ed6;
+        color: ${(props) => props.theme.hover};
+        background: ${(props) => props.theme.bg3};
       }
     }
   }
@@ -59,6 +60,7 @@ export const StyledCalendar = styled(Calendar)`
     border-radius: 10px;
     transition: background-color 0.2s;
     position: relative;
+    color: ${(props) => props.theme.text};
 
     abbr {
       font-size: 15.2px;
@@ -66,12 +68,12 @@ export const StyledCalendar = styled(Calendar)`
     }
 
     &:hover {
-      background: #f1f3f5;
+      background: #74c0fc;
     }
   }
 
   .react-calendar__tile--now {
-    background: #e3f2fd;
+    background: ${(props) => props.theme.calendarnow};
     font-weight: bold;
     color: #1c7ed6;
   }
@@ -123,7 +125,7 @@ export const TileTotal = styled.div`
 export const TimelineContainer = styled.div`
   margin-top: 16px;
   padding: 12px;
-  background: #f8f9fa;
+  background: ${(props) => props.theme.bg2};
   border-radius: 8px;
 `;
 
