@@ -15,10 +15,10 @@ export const getWeekId = (date: Date) => {
 // 월간 ID (예: "2025-05")
 export const getMonthId = (date: Date) => format(date, "yyyy-MM");
 
-// 사용자용 날짜 포맷 (예: "25.05.15")
+// 사용자용 날짜 포맷 (예: "05.15")
 export const formatDateDisplay = (date: Date | { seconds: number }): string => {
   const d = date instanceof Date ? date : new Date(date.seconds * 1000);
-  return format(d, "yy.MM.dd", { locale: ko });
+  return format(d, "MM.dd", { locale: ko });
 };
 
 // 주차 ID 문자열 (예: "2025-W20") → Date (그 주의 월요일)
