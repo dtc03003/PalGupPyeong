@@ -12,6 +12,8 @@ export const NavBar = styled.div`
 `;
 
 export const Logo = styled.div`
+  font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
 `;
 
