@@ -20,7 +20,7 @@ export const Dial = styled.div.attrs<{ $rotation: number }>((props) => ({
   aspect-ratio: 1;
   border: 8px solid #aaa;
   border-radius: 50%;
-  background: #f3f3f3;
+  background: ${(props) => props.theme.bg1};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +30,7 @@ export const Dial = styled.div.attrs<{ $rotation: number }>((props) => ({
 
 export const Display = styled.div.attrs<{ $rotation: number }>((props) => ({
   style: {
-    transform: `rotate(${- props.$rotation}deg)`,
+    transform: `rotate(${-props.$rotation}deg)`,
   },
 }))`
   font-size: 24px;
@@ -40,11 +40,10 @@ export const Display = styled.div.attrs<{ $rotation: number }>((props) => ({
   user-select: none;
 `;
 
-
 export const Handle = styled.div`
   width: 50px;
   aspect-ratio: 1;
-  background: #333;
+  background: ${(props) => props.theme.text};
   border-radius: 50%;
   position: absolute;
   top: -25px;

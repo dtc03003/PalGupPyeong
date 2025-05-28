@@ -8,10 +8,12 @@ export const NavBar = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 5px;
-  background-color: #ff4b4b;
+  background-color: ${({ theme }) => theme.navBg};
 `;
 
 export const Logo = styled.div`
+  font-size: 24px;
+  font-weight: bold;
   cursor: pointer;
 `;
 

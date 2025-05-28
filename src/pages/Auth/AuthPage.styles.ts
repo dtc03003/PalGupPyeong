@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f3f4f6;
+  background-color: ${({ theme }) => theme.bg0};
   padding: 10px;
 `;
 
@@ -14,7 +14,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: white;
+  background-color: ${({ theme }) => theme.bg1};
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
@@ -40,9 +40,11 @@ export const Input = styled.input`
   max-width: 300px;
   height: 45px;
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 8px;
   font-size: 14px;
+  background: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text};
 `;
 
 export const VisibilityBtn = styled.button`

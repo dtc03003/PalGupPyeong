@@ -9,6 +9,7 @@ import ScrollableWrapper from "@components/common/ScrollableWrapper";
 
 import WeeklyBarChart from "./WeeklyBarChart";
 import MonthlyBarChart from "./MonthlyBarChart";
+
 import * as S from "./HomePage.styles";
 
 const Home = () => {
@@ -19,7 +20,10 @@ const Home = () => {
 
   return (
     <S.Container>
-      <S.Title>팔굽평</S.Title>
+      <S.Title>
+        <S.Power />
+        팔굽혀펴기 기록 앱
+      </S.Title>
 
       <QuickAddRecord />
 

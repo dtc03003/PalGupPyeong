@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SideMenu from "./SideMenu";
+import ThemeToggleButton from "@components/common/ThemeToggleButton";
 import * as S from "./NavBar.styles";
 
 const NavBar = () => {
@@ -40,11 +41,14 @@ const NavBar = () => {
 
   return (
     <S.NavBar ref={parentRef}>
-      <S.Logo onClick={handleLogoClick}>
-        <h1>팔굽평</h1>
-      </S.Logo>
       <S.MenuIcon onClick={toggleMenu} />
-      <SideMenu ref={sideMenuRef} isOpen={isMenuOpen} onClose={() => setMenuOpen(false)} />
+      <S.Logo onClick={handleLogoClick}>팔굽평</S.Logo>
+      <ThemeToggleButton />
+      <SideMenu
+        ref={sideMenuRef}
+        isOpen={isMenuOpen}
+        onClose={() => setMenuOpen(false)}
+      />
     </S.NavBar>
   );
 };

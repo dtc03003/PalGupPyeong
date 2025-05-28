@@ -1,5 +1,4 @@
-import { ToastContainer } from "react-toastify";
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -12,8 +11,9 @@ const GlobalStyle = createGlobalStyle`
     height: 100vh;
     font-size: 10px;
     line-height: 1.5;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: ${({ theme }) => theme.outside};
+    color: ${({ theme }) => theme.text};
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   a {
@@ -41,16 +41,40 @@ const GlobalStyle = createGlobalStyle`
   .Toastify__toast {
     width: 100%;
   }
-`;
 
-export const StyledContainer = styled(ToastContainer)`
-  position: absolute;
-  width: 60%;
-  top: 50px !important;
-  right: 0 !important;
-  left: auto !important;
-  transform: none !important;
-  gap: 10px;
+  .custom-toast-container {
+    width: 60%;
+    position: absolute;
+    top: 50px !important;
+    right: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    gap: 10px;
+  }
+
+  .Toastify__toast-theme--dark {
+    background-color: ${({ theme }) => theme.bg1};
+  }
+
+  ::-webkit-scrollbar { 
+    width: 16px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.bg3};
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.scrollbarThumb};
+    border-radius: 8px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.scrollbarThumbHover}; 
+  }
 `;
 
 export default GlobalStyle;
