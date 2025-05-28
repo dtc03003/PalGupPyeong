@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import IconPower from "@assets/icons/icon_power.svg?react";
 
 export const Container = styled.div`
   display: flex;
@@ -15,6 +16,12 @@ export const Title = styled.h1`
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
+`;
+
+export const Power = styled(IconPower)`
+  width: 25px;
+  height: 25px;
+  filter: ${({ theme }) => (theme.mode === "dark" ? "invert(1)" : "none")};
 `;
 
 export const StatsWrapper = styled.div`
