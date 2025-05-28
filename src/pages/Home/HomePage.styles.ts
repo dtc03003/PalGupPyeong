@@ -9,7 +9,10 @@ export const Container = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
 `;
