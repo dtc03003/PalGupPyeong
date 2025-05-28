@@ -8,6 +8,9 @@ export const lightTheme = {
   bg2: "#EAEAEA",
   bg3: "#DDDDDD",
   navBg: "#ff4b4b",
+  sideMenuBg: "#dee2e6",
+  sideMenuHover: "#ced4da",
+  sideMenuBorder: "#adb5bd",
 
   // 텍스트
   text: "#333",
@@ -54,6 +57,9 @@ export const darkTheme = {
   bg2: "#2A2A2A",
   bg3: "#333333",
   navBg: "	#e64545",
+  sideMenuBg: "#1e1e1e",
+  sideMenuHover: "#2a2a2a",
+  sideMenuBorder: "#3a3a3a",
 
   // 텍스트
   text: "#FFFFFF",
