@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: 40%;
+  height: 45%;
   background-color: ${({ theme }) => theme.bg1};
   border-radius: 16px;
 
@@ -12,6 +12,16 @@ export const Wrapper = styled.div`
   align-items: center;
 `;
 
+export const ImgWrapper = styled.div`
+  width: 100%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px 16px 0 0;
+  background-color: ${({ theme }) => theme.bg3};
+`;
+
 export const Image = styled.img`
   width: 100%;
   height: 150px;
@@ -19,7 +29,14 @@ export const Image = styled.img`
   justify-content: center;
   align-items: center;
   object-fit: contain;
-  margin-bottom: 15px;
+`;
+
+export const Content = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 0;
 `;
 
 export const Title = styled.p`
