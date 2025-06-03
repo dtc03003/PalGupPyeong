@@ -4,20 +4,20 @@ interface PlanCardProps {
   point: string;
   title: string;
   src: string;
-  imgPosition?: "left" | "right";
+  $imgPosition?: "left" | "right";
 }
 
 const PlanCard = ({
   point,
   title,
   src,
-  imgPosition = "right",
+  $imgPosition = "right",
 }: PlanCardProps) => {
   return (
     <S.Wrapper>
       <S.Point>{point}</S.Point>
       <S.Title>{title}</S.Title>
-      <S.Image src={src} alt="Plan Card Image" imgPosition={imgPosition} />
+      <S.Image src={src} alt="Plan Card Image" $imgPosition={$imgPosition} />
     </S.Wrapper>
   );
 };
