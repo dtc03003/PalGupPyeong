@@ -9,6 +9,7 @@ import Layout from "@components/layout/Layout";
 import PrivateRoute from "@components/PrivateRoute";
 import PublicRoute from "@components/PublicRoute";
 
+import IntroPage from "@pages/Intro/IntroPage";
 import HomePage from "@pages/Home/HomePage";
 import AuthPage from "@pages/Auth/AuthPage";
 import RecordsPage from "@pages/Record/RecordPage";
@@ -47,7 +48,22 @@ function App() {
       <Layout>
         <NavBar />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <IntroPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/main"
+            element={
+              <PrivateRoute>
+                <HomePage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/auth/:type"
             element={

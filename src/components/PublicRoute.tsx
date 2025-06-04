@@ -13,7 +13,7 @@ const PublicRoute: React.FC<PublicRouteProps> = ({ children }) => {
     return null;
   }
 
-  return user ? <Navigate to="/" /> : children;
+  return user ? <Navigate to="/main" /> : children;
 };
 
 export default PublicRoute;
