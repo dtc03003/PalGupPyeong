@@ -12,7 +12,7 @@ export const useMonthlyRecords = (year: number, month: number) => {
       const startDate = new Date(year, month - 1, 1);
       const endDate = new Date(year, month, 1);
 
-      const recordsRef = collection(db, "pushupRecords", user.uid, "daily");
+      const recordsRef = collection(db, "users", user.uid, "daily");
       const recordsQuery = query(
         recordsRef,
         where("__name__", ">=", startDate.toISOString().slice(0, 10)),

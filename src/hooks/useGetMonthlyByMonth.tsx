@@ -11,7 +11,7 @@ export const useGetMonthlyByMonth = () => {
       if (!user) throw new Error("로그인이 필요합니다.");
 
       const year = getYear(new Date());
-      const monthlyRef = collection(db, "pushupRecords", user.uid, "monthly");
+      const monthlyRef = collection(db, "users", user.uid, "monthly");
       const snapshot = await getDocs(monthlyRef);
 
       const monthlyMap: Record<string, number> = {};

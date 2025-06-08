@@ -9,7 +9,7 @@ export const useDailyTimeline = (userId: string, date: Date | null) => {
     queryFn: async () => {
       if (!userId || !date) return [];
       const key = getDayId(date);
-      const ref = doc(db, "pushupRecords", userId, "daily", key);
+      const ref = doc(db, "users", userId, "daily", key);
       const snap = await getDoc(ref);
       return snap.exists() ? snap.data()?.timeline || [] : [];
     },

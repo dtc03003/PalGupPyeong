@@ -11,7 +11,7 @@ export const useSetDailyGoal = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const goalRef = doc(db, "pushupGoals", user.uid);
+      const goalRef = doc(db, "users", user.uid, "goals", "default");
       await setDoc(goalRef, { goal }, { merge: true });
     },
     onSuccess: () => {
@@ -29,9 +29,15 @@ export const useGetDailyGoal = () => {
     queryFn: async () => {
       if (!user) return 0;
 
-      const goalRef = doc(db, "pushupGoals", user.uid);
+      const goalRef = doc(db, "users", user.uid, "goals", "default");
       const goalSnap = await getDoc(goalRef);
-      return goalSnap.exists() ? goalSnap.data().goal : 0;
+
+      if (goalSnap.exists()) {
+        return goalSnap.data().goal;
+      } else {
+        await setDoc(goalRef, { goal: 100 });
+        return 100;
+      }
     },
     enabled: !!user,
   });

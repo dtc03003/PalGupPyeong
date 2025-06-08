@@ -11,7 +11,7 @@ export const useGetDailyRecords = () => {
       if (!user) throw new Error("로그인이 필요합니다.");
 
       const dayKey = getDayId(new Date());
-      const docRef = doc(db, "pushupRecords", user.uid, "daily", dayKey);
+      const docRef = doc(db, "users", user.uid, "daily", dayKey);
       const docSnap = await getDoc(docRef);
 
       return docSnap.exists() ? docSnap.data()?.total || 0 : 0;

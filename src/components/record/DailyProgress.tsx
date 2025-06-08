@@ -28,8 +28,6 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
   const handleSetGoal = () => {
     if (toast.isActive(TOAST_ID_DAILY_GOAL)) return;
 
-    const goalRef = { current: goal };
-
     toast(
       ({ closeToast }) => (
         <ConfirmToast
@@ -37,10 +35,16 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
           confirmText="저장"
           closeToast={closeToast}
           onConfirm={async () => {
+            const value = newGoalRef.current;
+
+            if (value <= 0) {
+              toast.error("1 이상 숫자를 입력해주세요.");
+              return;
+            }
             try {
-              await setDailyGoal.mutateAsync(goalRef.current);
+              await setDailyGoal.mutateAsync(value);
               toast.success("목표가 저장되었습니다!");
-            } catch {
+            } catch (error) {
               toast.error("목표 저장에 실패했습니다. 다시 시도해주세요.");
             }
           }}
@@ -49,7 +53,7 @@ const DailyProgress: React.FC<DailyProgressProps> = ({ total }) => {
             type="number"
             defaultValue={goal}
             onChange={(e) => {
-              goalRef.current = Number(e.target.value);
+              newGoalRef.current = Number(e.target.value);
             }}
           />
         </ConfirmToast>
