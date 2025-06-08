@@ -11,13 +11,7 @@ export const useGetMonthlyRecords = () => {
       if (!user) throw new Error("로그인이 필요합니다.");
 
       const monthKey = getMonthId(new Date());
-      const monthlyRef = doc(
-        db,
-        "pushupRecords",
-        user.uid,
-        "monthly",
-        monthKey
-      );
+      const monthlyRef = doc(db, "users", user.uid, "monthly", monthKey);
       const monthlyDoc = await getDoc(monthlyRef);
 
       return monthlyDoc.exists() ? monthlyDoc.data()?.total || 0 : 0;

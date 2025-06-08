@@ -17,7 +17,7 @@ const updateAggregate = async ({
   diff: number;
   createdAt: Date;
 }) => {
-  const ref = doc(db, "pushupRecords", userId, type, key);
+  const ref = doc(db, "users", userId, type, key);
   const docSnap = await getDoc(ref);
   const prevData = docSnap.exists() ? docSnap.data() : {};
   const prevTotal = prevData?.total || 0;

@@ -12,7 +12,7 @@ export const useTotalPages = (viewType: ViewType, pageSize: number) => {
       const user = auth.currentUser;
       if (!user) return;
 
-      const ref = collection(db, "pushupRecords", user.uid, viewType);
+      const ref = collection(db, "users", user.uid, viewType);
       const snapshot = await getCountFromServer(ref);
       const totalCount = snapshot.data().count;
 

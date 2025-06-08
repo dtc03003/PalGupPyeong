@@ -57,7 +57,7 @@ export const useRecords = (
       const user = auth.currentUser;
       if (!user) throw new Error("로그인이 필요합니다.");
 
-      const recordsRef = collection(db, "pushupRecords", user.uid, viewType);
+      const recordsRef = collection(db, "users", user.uid, viewType);
       const lastDocs = lastVisibleDocs[viewType] ?? [];
       const prevLastDoc = page > 1 ? lastDocs[page - 2] : null;
 
@@ -112,7 +112,7 @@ export const useAddRecord = () => {
 
       const recordRef = doc(
         db,
-        "pushupRecords",
+        "users",
         user.uid,
         "records",
         now.toMillis().toString()
@@ -145,7 +145,7 @@ export const useDeleteRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const recordRef = doc(db, "pushupRecords", user.uid, "records", recordId);
+      const recordRef = doc(db, "users", user.uid, "records", recordId);
       const recordDoc = await getDoc(recordRef);
       if (!recordDoc.exists()) throw new Error("기록이 존재하지 않습니다.");
 
@@ -177,7 +177,7 @@ export const useUpdateRecord = () => {
       const user = auth.currentUser;
       if (!user) throw new Error("로그인된 사용자가 없습니다.");
 
-      const recordRef = doc(db, "pushupRecords", user.uid, "records", recordId);
+      const recordRef = doc(db, "users", user.uid, "records", recordId);
       const recordDoc = await getDoc(recordRef);
       if (!recordDoc.exists()) throw new Error("기록이 존재하지 않습니다.");
 
