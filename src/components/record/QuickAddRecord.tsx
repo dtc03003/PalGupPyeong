@@ -5,7 +5,7 @@ import { useAddRecord } from "@hooks/useRecords";
 import * as S from "./QuickAddRecord.styles";
 
 const QuickAddRecord = () => {
-  const [count, setCount] = useState<string>("0");
+  const [count, setCount] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const addRecord = useAddRecord();
 
@@ -28,7 +28,7 @@ const QuickAddRecord = () => {
     try {
       await addRecord.mutateAsync({ count: Number(count) });
       toast.success("기록이 추가되었습니다!");
-      setCount("0");
+      setCount("");
     } catch {
       toast.error("기록 추가에 실패했습니다.");
     } finally {
@@ -45,11 +45,12 @@ const QuickAddRecord = () => {
           setCount(e.target.value.replace(/^0+(?=\d)/, ""))
         }
         min={1}
+        placeholder="0"
       />
       <S.AddButton
         onClick={handleAddRecord}
         loading={isSubmitting}
-        disabled={Number(count) <= 0}
+        disabled={Number(count) <= 0 || isNaN(Number(count))}
       >
         빠른 기록 추가
       </S.AddButton>
