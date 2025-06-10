@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 export const MenuWrapper = styled.div<{ $isOpen: boolean }>`
   position: absolute;
-  top: 50px;
+  top: 8vh;
   left: 0;
   width: 250px;
-  height: calc(100vh - 50px);
+  height: calc(100svh - 8vh);
   background-color: ${(props) => props.theme.sideMenuBg};
   color: ${(props) => props.theme.text};
   transform: ${(props: { $isOpen: boolean }) =>

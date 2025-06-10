@@ -3,11 +3,11 @@ import HamburgerIcon from "@assets/icons/icon_menu.svg?react";
 
 export const NavBar = styled.div`
   position: relative;
-  height: 50px;
+  height: 8vh;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px;
+  padding: 5px 15px;
   background-color: ${({ theme }) => theme.navBg};
 `;
 
