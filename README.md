@@ -1,130 +1,47 @@
-# React + TypeScript + Vite
+# 팔굽평 (Pushup Tracker)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+하루하루 팔굽혀펴기 수행량을 기록하고, 시각화된 통계로 자신의 운동 습관을 추적할 수 있는 모바일 웹 앱입니다.  
+목표 설정, 타이머, 소셜 로그인 등 다양한 기능으로 꾸준한 운동을 도와줍니다.
 
-Currently, two official plugins are available:
+## 주요 기능
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-  팔굽혀펴기 기록 추가 및 편집/삭제
+-  날짜별, 주간, 월간 통계 그래프 제공
+-  하루 목표 설정 및 진행률 확인
+-  휴식 타이머 (인터벌, 알람/진동 기능 포함 예정)
+-  다크 모드 지원
+-  Firebase 로그인 및 인증 (이메일, Google, Apple)
 
-## Expanding the ESLint configuration
+## 기술 스택
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**: React + TypeScript + Vite
+- **스타일링**: styled-components
+- **상태 관리**: zustand
+- **데이터베이스 및 인증**: Firebase (Firestore, Auth)
+- **차트 시각화**: Recharts
+- **배포**: vercel
 
-- Configure the top-level `parserOptions` property like this:
+## 디렉터리 구조
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+src/
+├── components/ # 재사용 가능한 컴포넌트
+├── pages/ # 주요 페이지 (기록, 통계 등)
+├── hooks/ # 커스텀 훅
+├── stores/ # zustand 상태 관리
+├── firebase/ # Firebase 설정 및 관련 함수
+├── utils/ # 유틸리티 함수
+├── types/ # 타입 정의
+└── App.tsx # 진입점
+
+## 설치 및 실행 방법
+
+```bash
+git clone https://github.com/dtc03003/PalGupPyeong.git
+npm i
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
-
-```
-PalGupPyeong
-├─ eslint.config.js
-├─ index.html
-├─ package-lock.json
-├─ package.json
-├─ README.md
-├─ src
-│  ├─ api
-│  │  └─ firebase.ts
-│  ├─ App.tsx
-│  ├─ assets
-│  │  ├─ icons
-│  │  │  ├─ btn_eye_off.svg
-│  │  │  ├─ btn_eye_on.svg
-│  │  │  ├─ icon_hamburger.svg
-│  │  │  └─ icon_setting.svg
-│  │  └─ images
-│  │     ├─ logo_PalGupPyeong.png
-│  │     └─ pushup.gif
-│  ├─ components
-│  │  ├─ layout
-│  │  │  ├─ Layout.tsx
-│  │  │  ├─ NavBar.styles.ts
-│  │  │  ├─ NavBar.tsx
-│  │  │  ├─ SideMenu.styles.ts
-│  │  │  └─ SideMenu.tsx
-│  │  ├─ PrivateRoute.tsx
-│  │  ├─ PublicRoute.tsx
-│  │  ├─ record
-│  │  │  ├─ DailyProgress.styles.ts
-│  │  │  ├─ DailyProgress.tsx
-│  │  │  ├─ QuickAddRecord.styles.ts
-│  │  │  ├─ QuickAddRecord.tsx
-│  │  │  ├─ RecordList.styles.ts
-│  │  │  └─ RecordList.tsx
-│  │  ├─ rotaryDial
-│  │  │  ├─ RotaryDial.styles.ts
-│  │  │  ├─ RotaryDial.tsx
-│  │  │  ├─ RotaryDialRecordForm.styles.ts
-│  │  │  └─ RotaryDialRecordForm.tsx
-│  │  └─ timer
-│  │     ├─ TimerComponent.styles.ts
-│  │     └─ TimerComponent.tsx
-│  ├─ hooks
-│  │  ├─ useAuth.ts
-│  │  ├─ useDailyGoal.ts
-│  │  ├─ useGetDailyRecords.ts
-│  │  ├─ useGetMonthlyRecords.ts
-│  │  ├─ useGetWeeklyRecords.ts
-│  │  └─ useRecords.ts
-│  ├─ main.tsx
-│  ├─ pages
-│  │  ├─ Auth
-│  │  │  ├─ AuthPage.styles.ts
-│  │  │  └─ AuthPage.tsx
-│  │  ├─ Error
-│  │  │  ├─ ErrorPage.styles.ts
-│  │  │  └─ ErrorPage.tsx
-│  │  ├─ Home
-│  │  │  ├─ HomePage.styles.ts
-│  │  │  └─ HomePage.tsx
-│  │  ├─ MyRecords
-│  │  │  └─ MyRecordsPage.tsx
-│  │  └─ Record
-│  │     └─ RecordPage.tsx
-│  ├─ styles
-│  │  ├─ GlobalStyles.ts
-│  │  └─ theme.ts
-│  ├─ svg.d.ts
-│  ├─ utils
-│  │  └─ dateUtils.ts
-│  └─ vite-env.d.ts
-├─ tsconfig.app.json
-├─ tsconfig.json
-├─ tsconfig.node.json
-└─ vite.config.ts
-
-```
+# 향후 계획
+ 소셜 로그인 (카카오, 구글)
+ 기록 공유 기능 (이미지로 변환하여 SNS에 공유)
+ 다국어 지원 (한국어/영어)
