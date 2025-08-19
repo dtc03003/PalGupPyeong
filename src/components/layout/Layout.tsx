@@ -2,12 +2,10 @@ import styled from "styled-components";
 
 const Container = styled.div`
   position: relative;
-  width: 100%;
-  max-width: 428px;
-  height: calc(100svh - 8vh);
+  height: 100dvh;
+  aspect-ratio: 9 / 16;
   margin: 0 auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  min-height: 100vh;
   background-color: ${({ theme }) => theme.bg0};
   overflow: hidden;
 `;
